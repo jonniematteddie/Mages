@@ -10,6 +10,8 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import jonniematteddie.mages.networking.NetworkingUtils;
+import jonniematteddie.mages.networking.Request;
+import jonniematteddie.mages.networking.Response;
 
 /**
  * Server for hosting games
@@ -73,9 +75,35 @@ public class MagesServer {
 
 		server.addListener(new Listener() {
 			@Override
-			public void received(final Connection connection, final Object object) {
-				System.out.println("Received object of type: [" + object.getClass().getName() + "] from connection: [" + connection + "]");
-				server.sendToAllTCP(object);
+			public void received(final Connection connection, final Object received) {
+				if (received instanceof Request) {
+					Request request = (Request) received;
+					
+					request.receive();
+					
+					Response response = request.respond();
+					int connectionID = response.connectionID();
+					
+					if (connectionID == -1) {
+						switch (response.getProtocol()) {
+						case TCP:
+							server.sendToAllTCP(response);
+							break;
+						case UDP:
+							server.sendToAllUDP(response);
+							break;
+						}
+					} else {
+						switch (response.getProtocol()) {
+						case TCP:
+							server.sendToTCP(response.connectionID(), response);
+							break;
+						case UDP:
+							server.sendToUDP(response.connectionID(), response);
+							break;
+						}
+					}
+				}
 			}
 		});
 	}
