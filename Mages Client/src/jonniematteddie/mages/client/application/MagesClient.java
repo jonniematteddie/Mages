@@ -9,6 +9,10 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import jonniematteddie.mages.networking.NetworkingUtils;
+import jonniematteddie.mages.networking.Request;
+import jonniematteddie.mages.networking.Response;
+
 /**
  * The game client for Mages
  *
@@ -44,9 +48,31 @@ public class MagesClient implements ApplicationListener {
 
 
 	private void setupKryonetClient(String address, int tcpPort, int udpPort) {
+		for (Class<?> c : NetworkingUtils.getClassesToRegister()) {
+			client.getKryo().register(c);
+		}
+		
 		client.addListener(new Listener() {
 			@Override
-			public void received (Connection connection, Object object) {
+			public void received(Connection connection, Object received) {
+				if (received instanceof Request) {
+					Request request = (Request) received;
+					
+					request.receive();
+					
+					Response response = request.respond();
+					switch (response.getProtocol()) {
+					case TCP:
+						client.sendTCP(response);
+						break;
+					case UDP:
+						client.sendUDP(response);
+						break;
+					}
+				} else if (received instanceof Response) {
+					Response response = (Response) received;
+					response.acknowledge(connection);
+				}
 			}
 		});
 		

@@ -12,6 +12,7 @@ import com.esotericsoftware.kryonet.Server;
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.Request;
 import jonniematteddie.mages.networking.Response;
+import jonniematteddie.mages.networking.framework.PingRequest;
 
 /**
  * Server for hosting games
@@ -24,7 +25,7 @@ public class MagesServer {
 	private final int tcpPort;
 	private final int udpPort;
 	
-	private Thread synchronizationThread;
+	private Thread pingThread;
 
 	/**
 	 * @param tcpPort port to use for TCP
@@ -35,18 +36,21 @@ public class MagesServer {
 		this.udpPort = udpPort;
 		this.server = new Server();
 		
-		synchronizationThread = new Thread(() -> {
+		pingThread = new Thread(() -> {
 			while (true) {
 				try {
-					Thread.sleep(100);
+					Thread.sleep(500);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 				
+				PingRequest pingRequest = new PingRequest();
+				pingRequest.prepare();
+				server.sendToAllTCP(pingRequest);
 			}
 		});
 		
-		synchronizationThread.start();
+		pingThread.start();
 	}
 
 
@@ -82,9 +86,8 @@ public class MagesServer {
 					request.receive();
 					
 					Response response = request.respond();
-					int connectionID = response.connectionID();
 					
-					if (connectionID == -1) {
+					if (response.replyToAll()) {
 						switch (response.getProtocol()) {
 						case TCP:
 							server.sendToAllTCP(response);
@@ -96,13 +99,15 @@ public class MagesServer {
 					} else {
 						switch (response.getProtocol()) {
 						case TCP:
-							server.sendToTCP(response.connectionID(), response);
+							server.sendToTCP(connection.getID(), response);
 							break;
 						case UDP:
-							server.sendToUDP(response.connectionID(), response);
+							server.sendToUDP(connection.getID(), response);
 							break;
 						}
 					}
+				} else if (received instanceof Response) {
+					((Response) received).acknowledge(connection);
 				}
 			}
 		});

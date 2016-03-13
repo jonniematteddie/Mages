@@ -8,6 +8,12 @@ import java.io.Serializable;
  * @author Matt
  */
 public interface Request extends Serializable{
+	
+	/**
+	 * Called on the sender immediately prior to being sent.
+	 */
+	public void prepare();
+	
 
 	/**
 	 * Called on the receiver.

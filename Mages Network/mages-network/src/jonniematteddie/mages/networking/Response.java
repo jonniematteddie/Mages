@@ -2,6 +2,8 @@ package jonniematteddie.mages.networking;
 
 import java.io.Serializable;
 
+import com.esotericsoftware.kryonet.Connection;
+
 /**
  * A Reponse that is sent by the server to clients
  *
@@ -12,13 +14,13 @@ public interface Response extends Serializable {
 	/**
 	 * Called client-side once received
 	 */
-	public void acknowledge();
+	public void acknowledge(final Connection connection);
 	
 	
 	/**
-	 * @return the connection ID to send the resopnse to, -1 means to all
+	 * @return whether or not the response should be sent to all
 	 */
-	public int connectionID();
+	public boolean replyToAll();
 	
 	
 	/**

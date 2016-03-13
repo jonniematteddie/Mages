@@ -4,6 +4,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.esotericsoftware.kryonet.Client;
 import com.google.inject.Inject;
 
+import jonniematteddie.mages.networking.framework.PingRequest;
+
 /**
  * {@link InputProcessor} used by {@link MagesClient}
  *
@@ -17,8 +19,6 @@ public class ClientInputProcessor implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub
-		
-		client.sendTCP("Hello Eddie!");
 		return false;
 	}
 
@@ -26,6 +26,10 @@ public class ClientInputProcessor implements InputProcessor {
 	@Override
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub
+		
+		PingRequest object = new PingRequest();
+		object.prepare();
+		client.sendTCP(object);
 		return false;
 	}
 
