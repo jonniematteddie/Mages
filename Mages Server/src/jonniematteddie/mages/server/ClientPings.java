@@ -1,6 +1,8 @@
 package jonniematteddie.mages.server;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
@@ -16,7 +18,11 @@ public class ClientPings {
 		clientPings.put(clientId, System.currentTimeMillis() - pingResponse.getOriginalSentTime());
 	}
 	
-	public Map<Integer, Long> getClientPings() {
-		return clientPings;
+	public void removePing(int clientId) {
+		clientPings.remove(clientId);
+	}
+	
+	public void forEachEntry(Consumer<Entry<Integer, Long>> consumer) {
+		clientPings.entrySet().forEach(consumer);
 	}
 }

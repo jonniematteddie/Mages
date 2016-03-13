@@ -36,10 +36,8 @@ public class MagesServer {
 	@Inject private ClientPings clientPings;
 	
 	/**
-	 * @param tcpPort
-	 *            port to use for TCP
-	 * @param udpPort
-	 *            port to use for UDP
+	 * @param tcpPort port to use for TCP
+	 * @param udpPort port to use for UDP
 	 */
 	private MagesServer(int tcpPort, int udpPort) {
 		injector = Guice.createInjector(new ServerModule());
@@ -60,6 +58,10 @@ public class MagesServer {
 				PingRequest pingRequest = new PingRequest();
 				pingRequest.prepare();
 				server.sendToAllTCP(pingRequest);
+				
+				clientPings.forEachEntry(entry -> {
+					System.out.println("Client: [" + entry.getKey() + "] Has Ping: [" + entry.getValue() + "]");
+				});
 			}
 		});
 
@@ -67,13 +69,10 @@ public class MagesServer {
 	}
 
 	/**
-	 * @param tcpPort
-	 *            port to use for TCP
-	 * @param udpPort
-	 *            port to use for UDP
+	 * @param tcpPort port to use for TCP
+	 * @param udpPort port to use for UDP
 	 *
-	 * @return a new {@link MagesServer} configured using the specified TCP and
-	 *         UDP ports
+	 * @return a new {@link MagesServer} configured using the specified TCP and UDP ports
 	 */
 	public static MagesServer server(int tcpPort, int udpPort) {
 		return new MagesServer(tcpPort, udpPort);
@@ -92,6 +91,12 @@ public class MagesServer {
 		}
 
 		server.addListener(new Listener() {
+			@Override
+			public void disconnected (Connection connection) {
+				clientPings.getClientPings()
+			}
+			
+			
 			@Override
 			public void received(final Connection connection, final Object received) {
 				if (received instanceof Request) {
