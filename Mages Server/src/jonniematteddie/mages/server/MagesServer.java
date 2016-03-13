@@ -22,10 +22,7 @@ public class MagesServer {
 	private final int tcpPort;
 	private final int udpPort;
 	
-	private float x = 0f;
-	private float y = 0f;
-	
-	Thread t;
+	private Thread synchronizationThread;
 
 	/**
 	 * @param tcpPort port to use for TCP
@@ -36,8 +33,7 @@ public class MagesServer {
 		this.udpPort = udpPort;
 		this.server = new Server();
 		
-		
-		t = new Thread(() -> {
+		synchronizationThread = new Thread(() -> {
 			while (true) {
 				try {
 					Thread.sleep(100);
@@ -45,16 +41,10 @@ public class MagesServer {
 					throw new RuntimeException(e);
 				}
 				
-				x++;
-				x++;
-				y++;
-				
-				server.sendToAllTCP("x:" + x);
-				server.sendToAllTCP("y:" + y);
 			}
 		});
 		
-		t.start();
+		synchronizationThread.start();
 	}
 
 
@@ -76,7 +66,7 @@ public class MagesServer {
 		server.start();
 		server.bind(tcpPort, udpPort);
 		((Kryo.DefaultInstantiatorStrategy) server.getKryo().getInstantiatorStrategy()).setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
-
+		
 		for (Class<?> c : NetworkingUtils.getClassesToRegister()) {
 			server.getKryo().register(c);
 		}

@@ -7,9 +7,13 @@
   <dependencies>
   	<dependency>
   		<groupId>jonniematteddie</groupId>
+  		<artifactId>mages-network</artifactId>
+  		<version>0.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>jonniematteddie</groupId>
   		<artifactId>mages-core</artifactId>
   		<version>0.0.1</version>
-  		<type>pom</type>
   	</dependency>
   </dependencies>
 </project>
