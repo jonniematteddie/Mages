@@ -2,15 +2,12 @@ package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import jonniematteddie.mages.client.graphics.GraphicsUtilities;
 
 /**
  * The game client for Mages
@@ -33,8 +30,6 @@ public class MagesClient implements ApplicationListener {
 	@Inject
 	private ClientInputProcessor clientInputProcessor;
 	
-	private float x = 0f, y = 0f;
-	
 	@Override
 	public void create() {
 		// Set up the injector and inject dependencies
@@ -52,15 +47,6 @@ public class MagesClient implements ApplicationListener {
 		client.addListener(new Listener() {
 			@Override
 			public void received (Connection connection, Object object) {
-				if (object instanceof String) {
-					String received = (String) object;
-					
-					if (received.startsWith("x:")) {
-						x = Float.parseFloat(received.replace("x:", ""));
-					} else if (received.startsWith("y:")) {
-						y = Float.parseFloat(received.replace("y:", ""));
-					}
-				}
 			}
 		});
 		
@@ -81,12 +67,6 @@ public class MagesClient implements ApplicationListener {
 
 	@Override
 	public void render() {
-		GraphicsUtilities.clear();
-		GraphicsUtilities.getShaperenderer().begin(ShapeType.Filled);
-		
-		GraphicsUtilities.getShaperenderer().circle(x, y, 10f);
-		
-		GraphicsUtilities.getShaperenderer().end();
 	}
 
 
