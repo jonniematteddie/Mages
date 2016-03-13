@@ -1,7 +1,6 @@
 package jonniematteddie.mages.server;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -9,7 +8,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.google.common.collect.Maps;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.Request;
@@ -24,14 +25,16 @@ import jonniematteddie.mages.networking.framework.PingResponse;
  */
 public class MagesServer {
 
+	private static Injector injector;
+	
 	private final Server server;
 	private final int tcpPort;
 	private final int udpPort;
 
 	private Thread pingThread;
 
-	private Map<Integer, Long> clientPings = Maps.newConcurrentMap();
-
+	@Inject private ClientPings clientPings;
+	
 	/**
 	 * @param tcpPort
 	 *            port to use for TCP
@@ -39,6 +42,9 @@ public class MagesServer {
 	 *            port to use for UDP
 	 */
 	private MagesServer(int tcpPort, int udpPort) {
+		injector = Guice.createInjector(new ServerModule());
+		injector.injectMembers(this);
+		
 		this.tcpPort = tcpPort;
 		this.udpPort = udpPort;
 		this.server = new Server();
@@ -117,8 +123,10 @@ public class MagesServer {
 				} else if (received instanceof Response) {
 					((Response) received).acknowledge(connection);
 					
+					// TODO - We want the average of the ping for each client ID. maybe average of last 10? last 15?
+					// idk, im not a scientist.
 					if (received instanceof PingResponse) {
-						clientPings.put(connection.getID(), System.currentTimeMillis() - ((PingResponse) received).getOriginalSentTime());
+						clientPings.addPing(connection.getID(), (PingResponse) received);
 					}
 				}
 			}
