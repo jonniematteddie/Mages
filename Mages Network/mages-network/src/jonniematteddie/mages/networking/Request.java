@@ -1,19 +1,22 @@
 package jonniematteddie.mages.networking;
 
+import java.io.Serializable;
+
 /**
- * A Request that is made from client to server
+ * A Request that is made between clients and server or vice versa.
  *
  * @author Matt
  */
-public interface Request {
+public interface Request extends Serializable{
 
 	/**
-	 * Called on the server once this {@link Request} is received
+	 * Called on the receiver.
 	 */
 	public void receive();
 	
+	
 	/**
-	 * @return the {@link Response} the server sends back to the client
+	 * @return the {@link Response} the receiver sends back to the requester.
 	 */
 	public Response respond();
 }
