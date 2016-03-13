@@ -93,7 +93,7 @@ public class MagesServer {
 		server.addListener(new Listener() {
 			@Override
 			public void disconnected (Connection connection) {
-				clientPings.getClientPings()
+				clientPings.removePing(connection.getID());
 			}
 			
 			
