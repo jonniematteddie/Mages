@@ -60,6 +60,7 @@ public class MagesServer {
 			@Override
 			public void received(final Connection connection, final Object object) {
 				System.out.println("Received object of type: [" + object.getClass().getName() + "] from connection: [" + connection + "]");
+				server.sendToAllTCP(object);
 			}
 		});
 	}

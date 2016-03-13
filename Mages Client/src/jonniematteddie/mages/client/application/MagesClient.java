@@ -2,12 +2,12 @@ package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.google.inject.Binder;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import jonniematteddie.mages.client.graphics.api.IndividualRenderer;
-import jonniematteddie.mages.client.graphics.service.PlaceHolderIndividualRenderer;
 
 /**
  * The game client for Mages
@@ -21,13 +21,42 @@ public class MagesClient implements ApplicationListener {
 	 */
 	private static Injector injector;
 	
+	/**
+	 * The Kryonet {@link Client}
+	 */
+	@Inject
+	private Client client;
+	
+	@Inject
+	private ClientInputProcessor clientInputProcessor;
+	
 	@Override
 	public void create() {
-		// Set up the injector
+		// Set up the injector and inject dependencies
 		injector = Guice.createInjector(new ClientModule());
+		injector.injectMembers(this);
 		
 		// Bind the input processor
-		Gdx.input.setInputProcessor(new ClientInputProcessor());
+		Gdx.input.setInputProcessor(clientInputProcessor);
+		
+		setupKryonetClient("localhost", 30122, 30123);
+	}
+
+
+	private void setupKryonetClient(String address, int tcpPort, int udpPort) {
+		client.addListener(new Listener() {
+			@Override
+			public void received (Connection connection, Object object) {
+				System.out.println(object.toString());
+			}
+		});
+		
+		try {
+			client.start();
+			client.connect(10000, address, tcpPort, udpPort);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

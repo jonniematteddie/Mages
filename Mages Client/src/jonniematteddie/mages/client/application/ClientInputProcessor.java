@@ -1,6 +1,8 @@
 package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.InputProcessor;
+import com.esotericsoftware.kryonet.Client;
+import com.google.inject.Inject;
 
 /**
  * {@link InputProcessor} used by {@link MagesClient}
@@ -8,10 +10,15 @@ import com.badlogic.gdx.InputProcessor;
  * @author Matt
  */
 public class ClientInputProcessor implements InputProcessor {
+	
+	@Inject
+	private Client client;
 
 	@Override
 	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub
+		
+		client.sendTCP("Hello Eddie!");
 		return false;
 	}
 
