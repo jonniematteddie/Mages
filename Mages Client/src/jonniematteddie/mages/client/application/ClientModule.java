@@ -16,6 +16,5 @@ public class ClientModule implements Module {
 	public void configure(Binder binder) {
 		// We only ever want one instance of the client
 		binder.bind(Client.class).toInstance(new Client());
-		binder.bind(ClientInputProcessor.class).toInstance(new ClientInputProcessor());
 	}
 }

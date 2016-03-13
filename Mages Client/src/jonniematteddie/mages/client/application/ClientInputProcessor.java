@@ -3,6 +3,7 @@ package jonniematteddie.mages.client.application;
 import com.badlogic.gdx.InputProcessor;
 import com.esotericsoftware.kryonet.Client;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import jonniematteddie.mages.networking.framework.PingRequest;
 
@@ -11,6 +12,7 @@ import jonniematteddie.mages.networking.framework.PingRequest;
  *
  * @author Matt
  */
+@Singleton
 public class ClientInputProcessor implements InputProcessor {
 	
 	@Inject
