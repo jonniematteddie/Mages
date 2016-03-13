@@ -33,7 +33,8 @@ public class MagesServer {
 
 	private Thread pingThread;
 
-	@Inject private ClientPings clientPings;
+	@Inject
+	private ClientPings clientPings;
 	
 	/**
 	 * @param tcpPort port to use for TCP
