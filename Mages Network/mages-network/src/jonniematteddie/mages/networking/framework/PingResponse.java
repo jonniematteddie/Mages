@@ -25,7 +25,7 @@ public class PingResponse implements Response {
 
 	@Override
 	public void acknowledge(final Connection connection) {
-		System.out.println("Client: [" + connection.getID() + "], Ping:[" + Long.toString(System.currentTimeMillis() - originalSentTime) + "]");
+		System.out.println("Client: [" + connection.getID() + "], Ping:[" + Long.toString(System.currentTimeMillis() - getOriginalSentTime()) + "]");
 	}
 
 	
@@ -38,5 +38,9 @@ public class PingResponse implements Response {
 	@Override
 	public boolean replyToAll() {
 		return false;
+	}
+
+	public long getOriginalSentTime() {
+		return originalSentTime;
 	}
 }
