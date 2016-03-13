@@ -21,6 +21,11 @@ public class MagesServer {
 	private final Server server;
 	private final int tcpPort;
 	private final int udpPort;
+	
+	private float x = 0f;
+	private float y = 0f;
+	
+	Thread t;
 
 	/**
 	 * @param tcpPort port to use for TCP
@@ -30,6 +35,26 @@ public class MagesServer {
 		this.tcpPort = tcpPort;
 		this.udpPort = udpPort;
 		this.server = new Server();
+		
+		
+		t = new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				
+				x++;
+				x++;
+				y++;
+				
+				server.sendToAllTCP("x:" + x);
+				server.sendToAllTCP("y:" + y);
+			}
+		});
+		
+		t.start();
 	}
 
 
