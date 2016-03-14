@@ -2,6 +2,8 @@ package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * Entry point of the game client
@@ -20,6 +22,10 @@ public class ClientEntryPoint {
 		cfg.fullscreen = false; // TODO Persist config
 		cfg.resizable = true;
 
-		new LwjglApplication(new MagesClient(), cfg);
+		// Set up the Injector
+		Injector injector = Guice.createInjector(new ClientModule());
+
+		// Start the game client
+		new LwjglApplication(injector.getInstance(MagesClient.class), cfg);
 	}
 }

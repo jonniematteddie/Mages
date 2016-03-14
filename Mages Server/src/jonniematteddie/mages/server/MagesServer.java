@@ -8,9 +8,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.Request;
@@ -24,9 +22,6 @@ import jonniematteddie.mages.networking.framework.PingResponse;
  * @author Matt
  */
 public class MagesServer {
-
-	private static Injector injector;
-	
 	private final Server server;
 	private final int tcpPort;
 	private final int udpPort;
@@ -35,15 +30,12 @@ public class MagesServer {
 
 	@Inject
 	private ClientPings clientPings;
-	
+
 	/**
 	 * @param tcpPort port to use for TCP
 	 * @param udpPort port to use for UDP
 	 */
 	private MagesServer(int tcpPort, int udpPort) {
-		injector = Guice.createInjector(new ServerModule());
-		injector.injectMembers(this);
-		
 		this.tcpPort = tcpPort;
 		this.udpPort = udpPort;
 		this.server = new Server();
@@ -59,7 +51,7 @@ public class MagesServer {
 				PingRequest pingRequest = new PingRequest();
 				pingRequest.prepare();
 				server.sendToAllTCP(pingRequest);
-				
+
 				clientPings.forEachEntry(entry -> {
 					System.out.println("Client: [" + entry.getKey() + "] Has Ping: [" + entry.getValue() + "]");
 				});
@@ -79,6 +71,7 @@ public class MagesServer {
 		return new MagesServer(tcpPort, udpPort);
 	}
 
+
 	/**
 	 * Starts the server
 	 */
@@ -86,7 +79,7 @@ public class MagesServer {
 		server.start();
 		server.bind(tcpPort, udpPort);
 		((Kryo.DefaultInstantiatorStrategy) server.getKryo().getInstantiatorStrategy()).setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
-		
+
 		for (Class<?> c : NetworkingUtils.getClassesToRegister()) {
 			server.getKryo().register(c);
 		}
@@ -96,17 +89,17 @@ public class MagesServer {
 			public void disconnected (Connection connection) {
 				clientPings.removePing(connection.getID());
 			}
-			
-			
+
+
 			@Override
 			public void received(final Connection connection, final Object received) {
 				if (received instanceof Request) {
 					Request request = (Request) received;
-					
+
 					request.receive();
-					
+
 					Response response = request.respond();
-					
+
 					if (response.replyToAll()) {
 						switch (response.getProtocol()) {
 						case TCP:
@@ -128,7 +121,7 @@ public class MagesServer {
 					}
 				} else if (received instanceof Response) {
 					((Response) received).acknowledge(connection);
-					
+
 					// TODO - We want the average of the ping for each client ID. maybe average of last 10? last 15?
 					// idk, im not a scientist.
 					if (received instanceof PingResponse) {
