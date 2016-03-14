@@ -2,14 +2,13 @@ package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Inject;
 
+import jonniematteddie.mages.client.networking.ClientListener;
 import jonniematteddie.mages.networking.NetworkingUtils;
-import jonniematteddie.mages.networking.Request;
-import jonniematteddie.mages.networking.Response;
 
 /**
  * The game client for Mages
@@ -18,14 +17,14 @@ import jonniematteddie.mages.networking.Response;
  */
 public class MagesClient implements ApplicationListener {
 
-	/**
-	 * The Kryonet {@link Client}
-	 */
-	@Inject
-	private Client client;
+	/** The Kryonet {@link Client} */
+	@Inject private Client client;
 
-	@Inject
-	private ClientInputProcessor clientInputProcessor;
+	/** The {@link InputProcessor} used for the game client */
+	@Inject private ClientInputProcessor clientInputProcessor;
+
+	/** The {@link Listener} used by the Kryonet client */
+	@Inject private ClientListener clientListener;
 
 	@Override
 	public void create() {
@@ -36,34 +35,19 @@ public class MagesClient implements ApplicationListener {
 	}
 
 
+	/**
+	 * Sets up the Kryonet client and connect to the server with the specified address and ports
+	 *
+	 * @param address of the server
+	 * @param tcpPort of the server
+	 * @param udpPort of the server
+	 */
 	private void setupKryonetClient(String address, int tcpPort, int udpPort) {
 		for (Class<?> c : NetworkingUtils.getClassesToRegister()) {
 			client.getKryo().register(c);
 		}
 
-		client.addListener(new Listener() {
-			@Override
-			public void received(Connection connection, Object received) {
-				if (received instanceof Request) {
-					Request request = (Request) received;
-
-					request.receive();
-
-					Response response = request.respond();
-					switch (response.getProtocol()) {
-					case TCP:
-						client.sendTCP(response);
-						break;
-					case UDP:
-						client.sendUDP(response);
-						break;
-					}
-				} else if (received instanceof Response) {
-					Response response = (Response) received;
-					response.acknowledge(connection);
-				}
-			}
-		});
+		client.addListener(clientListener);
 
 		try {
 			client.start();

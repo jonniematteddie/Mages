@@ -1,4 +1,4 @@
-package jonniematteddie.mages.server;
+package jonniematteddie.mages.server.networking;
 
 import java.util.Map;
 import java.util.Map.Entry;
