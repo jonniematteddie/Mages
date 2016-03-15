@@ -14,16 +14,19 @@ import jonniematteddie.mages.world.model.World;
  *
  * @author Matt
  */
-public class InitialConnectionResponse implements Response {
+public class InitialConnectionResponse extends Response {
 	private static final long serialVersionUID = -3784983356217192464L;
 
 	private World referenceWorld;
 
 	@SuppressWarnings("unused")
 	/** No-arg constructor required for Kryonet */
-	private InitialConnectionResponse() {}
+	private InitialConnectionResponse() {
+		super(0L);
+	}
 
-	public InitialConnectionResponse(World referenceWorld) {
+	public InitialConnectionResponse(World referenceWorld, long requestID) {
+		super(requestID);
 		this.referenceWorld = referenceWorld;
 	}
 

@@ -9,22 +9,42 @@ import com.esotericsoftware.kryonet.Connection;
  *
  * @author Matt
  */
-public interface Response extends Serializable {
+public abstract class Response implements Serializable {
+	private static final long serialVersionUID = 8717728511583837619L;
+	
+	/** The unique ID of the request that resulted in the creation of this {@link Response} */
+	private long requestID;
+	
+	/**
+	 * Constructor
+	 */
+	protected Response(long requestID) {
+		this.requestID = requestID;
+	}
+	
 
 	/**
 	 * Called client-side once received
 	 */
-	public void acknowledge(final Connection connection);
+	public abstract void acknowledge(final Connection connection);
 
 
 	/**
 	 * @return whether or not the response should be sent to all
 	 */
-	public boolean replyToAll();
+	public abstract boolean replyToAll();
 
 
 	/**
 	 * @return the network protocol used to send the response
 	 */
-	public NetworkProtocol getProtocol();
+	public abstract NetworkProtocol getProtocol();
+	
+	
+	/**
+	 * @return unique ID of the request that resulted in the creation of this {@link Response}
+	 */
+	public long getRequestID() {
+		return requestID;
+	}
 }

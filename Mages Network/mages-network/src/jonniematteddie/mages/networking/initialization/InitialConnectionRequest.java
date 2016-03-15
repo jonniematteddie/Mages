@@ -10,14 +10,8 @@ import jonniematteddie.mages.world.model.World;
  *
  * @author Matt
  */
-public class InitialConnectionRequest implements Request {
+public class InitialConnectionRequest extends Request {
 	private static final long serialVersionUID = -8966601831465936709L;
-
-
-	@Override
-	public void prepare() {
-		// We don't need to do anything here
-	}
 
 
 	@Override
@@ -28,6 +22,12 @@ public class InitialConnectionRequest implements Request {
 
 	@Override
 	public Response respond() {
-		return new InitialConnectionResponse(InjectionUtilities.inject(World.class));
+		return new InitialConnectionResponse(InjectionUtilities.inject(World.class), getRequestId());
+	}
+
+
+	@Override
+	protected void internalPrepare() {
+		// We don't need to do anything here
 	}
 }

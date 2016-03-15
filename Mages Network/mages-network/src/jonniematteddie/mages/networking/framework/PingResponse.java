@@ -10,16 +10,19 @@ import jonniematteddie.mages.networking.Response;
  *
  * @author Matt
  */
-public class PingResponse implements Response {
+public class PingResponse extends Response {
 	private static final long serialVersionUID = 4873021113059919649L;
 
 	private long originalSentTime;
 
 	@SuppressWarnings("unused")
 	/** No-arg constructor required for Kryonet */
-	private PingResponse() {}
+	private PingResponse() {
+		super(0L);
+	}
 
-	public PingResponse(long originalSentTime) {
+	public PingResponse(long originalSentTime, long requestID) {
+		super(requestID);
 		this.originalSentTime = originalSentTime;
 	}
 

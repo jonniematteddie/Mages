@@ -8,7 +8,7 @@ import jonniematteddie.mages.networking.Response;
  *
  * @author Matt
  */
-public class PingRequest implements Request {
+public class PingRequest extends Request {
 	private static final long serialVersionUID = 6352110431745812960L;
 	
 	private long sentTime;
@@ -24,12 +24,12 @@ public class PingRequest implements Request {
 
 	@Override
 	public Response respond() {
-		return new PingResponse(sentTime);
+		return new PingResponse(sentTime, getRequestId());
 	}
 
-	
+
 	@Override
-	public void prepare() {
+	protected void internalPrepare() {
 		sentTime = System.currentTimeMillis();
 	}
 }

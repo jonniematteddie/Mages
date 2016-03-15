@@ -7,22 +7,42 @@ import java.io.Serializable;
  *
  * @author Matt
  */
-public interface Request extends Serializable{
+public abstract class Request implements Serializable {
+	private static final long serialVersionUID = -888361604817009041L;
+	
+	/** The unique ID of this {@link Request} */
+	private long requestId;
+
+	/**
+	 * Called on the sender immediately prior to being sent.
+	 */
+	public final void prepare() {
+		this.requestId = System.currentTimeMillis(); // TODO use a incrementing number generator
+	}
+	
 	
 	/**
 	 * Called on the sender immediately prior to being sent.
 	 */
-	public void prepare();
+	protected abstract void internalPrepare();
 	
 
 	/**
 	 * Called on the receiver.
 	 */
-	public void receive();
+	public abstract void receive();
 	
 	
 	/**
 	 * @return the {@link Response} the receiver sends back to the requester.
 	 */
-	public Response respond();
+	public abstract Response respond();
+
+
+	/**
+	 * @return the unique request ID
+	 */
+	public long getRequestId() {
+		return requestId;
+	}
 }

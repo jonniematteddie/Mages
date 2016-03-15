@@ -25,7 +25,8 @@ public class NetworkingUtils {
 	 * The networking threadpool
 	 */
 	private static ExecutorService networkThreadpool = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("networking-thread-%d").build());
-
+	
+	
 	/**
 	 * @return A list of classes to register for network serialization
 	 */
@@ -48,7 +49,17 @@ public class NetworkingUtils {
 	 * @param synchronous whether or not the {@link Request} thread should wait until a {@link Response} is received and acknowledged
 	 */
 	public static void sendTCP(Request requestToSend, boolean synchronous) {
-		// TODO synchronous / asynchronous
+		requestToSend.prepare();
+		
 		InjectionUtilities.inject(Client.class).sendTCP(requestToSend);
+		if (synchronous) {
+			synchronized(requestToSend) {
+				try {
+					requestToSend.wait();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 	}
 }
