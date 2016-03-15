@@ -18,6 +18,7 @@ public abstract class Request implements Serializable {
 	 */
 	public final void prepare() {
 		this.requestId = System.currentTimeMillis(); // TODO use a incrementing number generator
+		internalPrepare();
 	}
 	
 	
