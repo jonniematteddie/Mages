@@ -52,6 +52,10 @@ public class IndividualKinematicState implements Serializable {
 	 */
 	public static final class IndividualKinematicStateBuilder {
 		private Vector2 position, velocity, acceleration;
+		
+		public static IndividualKinematicStateBuilder builder() {
+			return new IndividualKinematicStateBuilder();
+		}
 
 		public IndividualKinematicStateBuilder withPosition(Vector2 position) {
 			this.position = position;

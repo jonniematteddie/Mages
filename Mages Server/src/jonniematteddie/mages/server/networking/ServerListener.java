@@ -1,13 +1,18 @@
 package jonniematteddie.mages.server.networking;
 
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import jonniematteddie.mages.character.model.Individual.IndividualBuilder;
+import jonniematteddie.mages.character.model.IndividualKinematicState.IndividualKinematicStateBuilder;
+import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.Request;
 import jonniematteddie.mages.networking.Response;
+import jonniematteddie.mages.world.model.World;
 
 /**
  * Mages Client specific implementation of {@link Listener}
@@ -22,6 +27,21 @@ public class ServerListener extends Listener {
 
 	@Inject
 	private Server server;
+	
+	
+	@Override
+	public void connected (Connection connection) {
+		InjectionUtilities.inject(World.class).addIndividual(
+			IndividualBuilder.bulder().withKinematicState(
+				IndividualKinematicStateBuilder.builder()
+				.withPosition(new Vector2())
+				.withVelocity(new Vector2())
+				.withAcceleration(new Vector2())
+				.build()
+			).build()
+		);
+	}
+	
 
 	@Override
 	public void disconnected (Connection connection) {

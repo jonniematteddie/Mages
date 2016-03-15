@@ -14,14 +14,14 @@ public class Individual implements Serializable {
 	private long uniqueIdentifier;
 	
 	/** No-arg constructor for Kryonet */
-	private Individual() {}
+	protected Individual() {}
 
 	/**
 	 * Private constructor used by a builder
 	 *
 	 * @param kinematicState
 	 */
-	private Individual(IndividualKinematicState kinematicState, long uniqueIdentifier) {
+	protected Individual(IndividualKinematicState kinematicState, long uniqueIdentifier) {
 		this.kinematicState = kinematicState;
 		this.uniqueIdentifier = uniqueIdentifier;
 	}
@@ -50,6 +50,10 @@ public class Individual implements Serializable {
 	 */
 	public static class IndividualBuilder {
 		private IndividualKinematicState kinematicState;
+		
+		public static IndividualBuilder bulder() {
+			return new IndividualBuilder();
+		}
 
 		public IndividualBuilder withKinematicState(IndividualKinematicState kinematicState) {
 			this.kinematicState = kinematicState;
