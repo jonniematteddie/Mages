@@ -17,8 +17,8 @@ import jonniematteddie.mages.networking.Response;
 @Singleton
 public class ClientListener extends Listener {
 
-	@Inject
-	private Client client;
+	@Inject	private Client client;
+	@Inject	private ClientNetworkUtils clientNetworkUtils;
 
 	@Override
 	public void received(Connection connection, Object received) {
@@ -39,8 +39,8 @@ public class ClientListener extends Listener {
 		} else if (received instanceof Response) {
 			Response response = (Response) received;
 			response.acknowledge(connection);
-			
-			ClientNetworkUtils.notifyAsyncRequests(response);
+
+			clientNetworkUtils.notifyAsyncRequests(response);
 		}
 	}
 }

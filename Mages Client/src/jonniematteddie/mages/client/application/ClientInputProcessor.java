@@ -1,9 +1,12 @@
 package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.InputProcessor;
-import com.esotericsoftware.kryonet.Client;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import jonniematteddie.mages.client.networking.ClientNetworkUtils;
+import jonniematteddie.mages.networking.control.KeyPressedRequest;
+import jonniematteddie.mages.networking.control.MappedKey;
 
 /**
  * {@link InputProcessor} used by {@link MagesClient}
@@ -12,21 +15,30 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ClientInputProcessor implements InputProcessor {
-	
-	@Inject
-	private Client client;
+
+	@Inject private ClientNetworkUtils clientNetworkUtils;
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+		MappedKey key = MappedKey.getForKey(keycode);
+		if (key == null) {
+			return false;
+		} else {
+			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, true));
+			return true;
+		}
 	}
 
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+		MappedKey key = MappedKey.getForKey(keycode);
+		if (key == null) {
+			return false;
+		} else {
+			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, false));
+			return true;
+		}
 	}
 
 

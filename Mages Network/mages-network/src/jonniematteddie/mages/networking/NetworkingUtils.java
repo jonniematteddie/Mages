@@ -13,6 +13,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import jonniematteddie.mages.character.model.Individual;
 import jonniematteddie.mages.character.model.IndividualKinematicState;
 import jonniematteddie.mages.character.model.PlayerControlledIndividual;
+import jonniematteddie.mages.networking.control.KeyPressedRequest;
+import jonniematteddie.mages.networking.control.MappedKey;
+import jonniematteddie.mages.networking.framework.DummyResponse;
 import jonniematteddie.mages.networking.framework.PingRequest;
 import jonniematteddie.mages.networking.framework.PingResponse;
 import jonniematteddie.mages.networking.initialization.SyncWorldRequest;
@@ -37,6 +40,9 @@ public class NetworkingUtils {
 	public static Collection<Class<?>> getClassesToRegister() {
 		List<Class<?>> classesToRegister = Lists.newLinkedList();
 
+		classesToRegister.add(DummyResponse.class);
+		classesToRegister.add(MappedKey.class);
+		classesToRegister.add(KeyPressedRequest.class);
 		classesToRegister.add(PlayerControlledIndividual.class);
 		classesToRegister.add(HashMap.class);
 		classesToRegister.add(Vector2.class);

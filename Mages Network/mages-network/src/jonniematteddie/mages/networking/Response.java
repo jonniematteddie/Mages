@@ -11,17 +11,17 @@ import com.esotericsoftware.kryonet.Connection;
  */
 public abstract class Response implements Serializable {
 	private static final long serialVersionUID = 8717728511583837619L;
-	
+
 	/** The unique ID of the request that resulted in the creation of this {@link Response} */
 	private long requestID;
-	
+
 	/**
 	 * Constructor
 	 */
 	protected Response(long requestID) {
 		this.requestID = requestID;
 	}
-	
+
 
 	/**
 	 * Called client-side once received
@@ -39,8 +39,8 @@ public abstract class Response implements Serializable {
 	 * @return the network protocol used to send the response
 	 */
 	public abstract NetworkProtocol getProtocol();
-	
-	
+
+
 	/**
 	 * @return unique ID of the request that resulted in the creation of this {@link Response}
 	 */

@@ -2,10 +2,8 @@ package jonniematteddie.mages.client.application;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Inject;
 
 import jonniematteddie.mages.client.graphics.GraphicsUtilities;
@@ -22,17 +20,11 @@ import jonniematteddie.mages.world.model.World;
  */
 public class MagesClient implements ApplicationListener {
 
-	/** The Kryonet {@link Client} */
 	@Inject private Client client;
-
-	/** The {@link InputProcessor} used for the game client */
 	@Inject private ClientInputProcessor clientInputProcessor;
-
-	/** The {@link Listener} used by the Kryonet client */
 	@Inject private ClientListener clientListener;
-
-	/** The World */
 	@Inject private World world;
+	@Inject private ClientNetworkUtils clientNetworkUtils;
 
 	@Override
 	public void create() {
@@ -74,7 +66,7 @@ public class MagesClient implements ApplicationListener {
 	 *
 	 */
 	private void connected() {
-		ClientNetworkUtils.sendTCPSynchronous(new SyncWorldRequest(), 10000);
+		clientNetworkUtils.sendTCPSynchronous(new SyncWorldRequest(), 10000);
 
 //		WorldUpdateService.getWorldUpdateThread(
 //			InjectionUtilities.inject(WorldUpdateService.class),
@@ -104,8 +96,8 @@ public class MagesClient implements ApplicationListener {
 
 		// Sync world every 1s
 		i++;
-		if (i == 60) {
-			ClientNetworkUtils.sendTCPAsynchronous(new SyncWorldRequest());
+		if (i == 10) {
+			clientNetworkUtils.sendTCPAsynchronous(new SyncWorldRequest());
 			i = 0;
 		}
 	}

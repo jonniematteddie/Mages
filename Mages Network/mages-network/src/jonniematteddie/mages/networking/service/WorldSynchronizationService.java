@@ -41,7 +41,7 @@ public class WorldSynchronizationService {
 		toSync.forEachIndividual(clientIndividual -> {
 			Individual serverIndividual = referenceWorld.getIndividual(clientIndividual.getUniqueIdentifier());
 			if (serverIndividual == null) {
-				toSync.reomveIndividual(clientIndividual.getUniqueIdentifier());
+				toSync.removeIndividual(clientIndividual.getUniqueIdentifier());
 			}
 		});
 	}

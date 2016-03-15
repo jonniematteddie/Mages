@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.esotericsoftware.kryonet.Client;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.Request;
@@ -14,12 +16,15 @@ import jonniematteddie.mages.networking.Response;
  *
  * @author Matt
  */
+@Singleton
 public class ClientNetworkUtils {
+
+	@Inject private Client client;
 
 	/**
 	 * Map containing all {@link Request}s that are blocked and waiting for a response
 	 */
-	private static Map<Long, Request> outstandingSynchronousRequests = Maps.newConcurrentMap();
+	private Map<Long, Request> outstandingSynchronousRequests = Maps.newConcurrentMap();
 
 	/**
 	 * Sends a request, synchronously
@@ -28,10 +33,9 @@ public class ClientNetworkUtils {
 	 * @param requestToSend
 	 * @param timeout if this is a synchronous request, the timeout will dictate the time elapsed until we give up waiting for a response
 	 */
-	public static void sendTCPSynchronous(Request requestToSend, long timeout) {
-		requestToSend.prepare();
-
-		InjectionUtilities.inject(Client.class).sendTCP(requestToSend);
+	public void sendTCPSynchronous(Request requestToSend, long timeout) {
+		requestToSend.prepare(client.getID());
+		client.sendTCP(requestToSend);
 		outstandingSynchronousRequests.put(requestToSend.getRequestId(), requestToSend);
 		synchronized(requestToSend) {
 			// TODO implement timeout
@@ -49,8 +53,8 @@ public class ClientNetworkUtils {
 	 *
 	 * @param requestToSend
 	 */
-	public static void sendTCPAsynchronous(Request requestToSend) {
-		requestToSend.prepare();
+	public void sendTCPAsynchronous(Request requestToSend) {
+		requestToSend.prepare(client.getID());
 		InjectionUtilities.inject(Client.class).sendTCP(requestToSend);
 	}
 
@@ -60,7 +64,7 @@ public class ClientNetworkUtils {
 	 *
 	 * @param response received
 	 */
-	public static void notifyAsyncRequests(Response response) {
+	public void notifyAsyncRequests(Response response) {
 		Request request = outstandingSynchronousRequests.remove(response.getRequestID());
 		if (request != null) {
 			synchronized (request) {

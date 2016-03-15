@@ -22,12 +22,9 @@ import jonniematteddie.mages.world.model.World;
 @Singleton
 public class ServerListener extends Listener {
 
-	@Inject
-	private ClientPings clientPings;
-
-	@Inject
-	private Server server;
-
+	@Inject	private ClientPings clientPings;
+	@Inject	private Server server;
+	@Inject	private World world;
 
 	@Override
 	public void connected (Connection connection) {
@@ -39,8 +36,8 @@ public class ServerListener extends Listener {
 				.withKinematicState(
 					IndividualKinematicStateBuilder.builder()
 						.withPosition(new Vector2())
-						.withVelocity(new Vector2(10, 10))
-						.withAcceleration(new Vector2(0, -2))
+						.withVelocity(new Vector2())
+						.withAcceleration(new Vector2())
 					.build()
 				)
 			.build()
@@ -51,6 +48,7 @@ public class ServerListener extends Listener {
 	@Override
 	public void disconnected (Connection connection) {
 		clientPings.removePing(connection.getID());
+		world.removePlayerControlledIndividual(connection.getID());
 	}
 
 

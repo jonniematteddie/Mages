@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import com.google.common.collect.Maps;
 
 import jonniematteddie.mages.character.model.Individual;
+import jonniematteddie.mages.character.model.PlayerControlledIndividual;
 
 /**
  * A {@link World} holds information about:
@@ -20,6 +21,8 @@ public class World implements Serializable {
 	public static float DEFAULT_GRAVITY = 9.81f;
 
 	private final Map<Long, Individual> individuals = Maps.newHashMap();
+	private final Map<Integer, Long> playerControlledIndividuals = Maps.newHashMap();
+
 	private float gravity;
 
 	/** No-arg constructor for Kryonet */
@@ -57,13 +60,35 @@ public class World implements Serializable {
 
 
 	/**
+	 * Gets a player controlled individual with the given client ID
+	 *
+	 * @param uniqueIdentifier of the individual to retrieve
+	 * @return the individual with the given unique ID
+	 */
+	public Individual getClientControlledIndividual(int clientID) {
+		return individuals.get(playerControlledIndividuals.get(clientID));
+	}
+
+
+	/**
 	 * Removes an individual with the given unique identifier
 	 *
 	 * @param uniqueIdentifier of the individual to remove
 	 * @return the removed individual
 	 */
-	public Individual reomveIndividual(long uniqueIdentifier) {
+	public Individual removeIndividual(long uniqueIdentifier) {
 		return individuals.remove(uniqueIdentifier);
+	}
+
+
+	/**
+	 * Removes a player controlled individual with the given clientID
+	 *
+	 * @param clientID of the individual to remove
+	 * @return the unique ID of the removed individual
+	 */
+	public long removePlayerControlledIndividual(int clientID) {
+		return playerControlledIndividuals.remove(clientID);
 	}
 
 
@@ -73,6 +98,10 @@ public class World implements Serializable {
 	 */
 	public void addIndividual(Individual toAdd) {
 		individuals.put(toAdd.getUniqueIdentifier(), toAdd);
+
+		if (toAdd instanceof PlayerControlledIndividual) {
+			playerControlledIndividuals.put(((PlayerControlledIndividual) toAdd).getClientID(), toAdd.getUniqueIdentifier());
+		}
 	}
 
 

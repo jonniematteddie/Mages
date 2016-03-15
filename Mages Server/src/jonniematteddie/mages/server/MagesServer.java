@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.framework.PingRequest;
-import jonniematteddie.mages.server.networking.ClientPings;
 import jonniematteddie.mages.server.networking.ServerListener;
 import jonniematteddie.mages.world.model.World;
 import jonniematteddie.mages.world.service.WorldUpdateService;
@@ -24,7 +23,6 @@ import jonniematteddie.mages.world.service.WorldUpdateService;
 public class MagesServer {
 
 	@Inject private Server server;
-	@Inject private ClientPings clientPings;
 	@Inject private ServerListener serverListener;
 
 	private final int tcpPort;
@@ -65,12 +63,8 @@ public class MagesServer {
 				}
 
 				PingRequest pingRequest = new PingRequest();
-				pingRequest.prepare();
+				pingRequest.prepare(-1);
 				server.sendToAllTCP(pingRequest);
-
-				clientPings.forEachEntry(entry -> {
-					System.out.println("Client: [" + entry.getKey() + "] Has Ping: [" + entry.getValue() + "]");
-				});
 			}
 		});
 
