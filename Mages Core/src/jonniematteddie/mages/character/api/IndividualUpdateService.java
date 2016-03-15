@@ -1,6 +1,7 @@
 package jonniematteddie.mages.character.api;
 
 import jonniematteddie.mages.character.model.Individual;
+import jonniematteddie.mages.character.model.IndividualKinematicState;
 
 /**
  * Service used to update a {@link Individual}
@@ -10,13 +11,10 @@ import jonniematteddie.mages.character.model.Individual;
 public interface IndividualUpdateService {
 
 	/**
-	 * @param deltaSeconds, the time step used to update the character, measured in seconds
+	 * @param individual to update
+	 * @param numberOfFrames the number of frames to update by
+	 *
+	 * @return The updated {@link IndividualKinematicState}, without setting it on the {@link Individual}
 	 */
-	public default void update(Individual individual, float deltaSeconds) {
-		individual.getKinematicState().getPosition().x += individual.getKinematicState().getVelocity().x * deltaSeconds;
-		individual.getKinematicState().getPosition().y += individual.getKinematicState().getVelocity().y * deltaSeconds;
-
-		individual.getKinematicState().getVelocity().x += individual.getKinematicState().getAcceleration().x * deltaSeconds;
-		individual.getKinematicState().getVelocity().y += individual.getKinematicState().getAcceleration().y * deltaSeconds;
-	}
+	public IndividualKinematicState updateKinematics(Individual individual, int numberOfFrames);
 }

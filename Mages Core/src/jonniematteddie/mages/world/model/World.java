@@ -1,9 +1,10 @@
 package jonniematteddie.mages.world.model;
 
-import java.util.Collection;
+import java.io.Serializable;
+import java.util.Map;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import jonniematteddie.mages.character.model.Individual;
 
@@ -14,10 +15,12 @@ import jonniematteddie.mages.character.model.Individual;
  *
  * @author Matt
  */
-public class World {
+public class World implements Serializable {
+	private static final long serialVersionUID = 1L;
+	public static float DEFAULT_GRAVITY = 9.81f;
 
-	private final Collection<Individual> individuals = Lists.newLinkedList();
-	private final float gravity;
+	private final Map<Long, Individual> individuals = Maps.newConcurrentMap();
+	private float gravity;
 
 	/**
 	 * Private constructor, used by a builder
@@ -30,20 +33,34 @@ public class World {
 
 
 	/**
-	 * @return the gravitational acceleration value
+	 * @param individualConsumer {@link Consumer} to apply to each {@link Individual} of this {@link World}
 	 */
-	public float getGravity() {
-		return gravity;
+	public void forEachIndividual(Consumer<Individual> individualConsumer) {
+		for (Individual i : individuals.values()) {
+			individualConsumer.accept(i);
+		}
 	}
 
 
 	/**
-	 * @param individualConsumer {@link Consumer} to apply to each {@link Individual} of this {@link World}
+	 * Gets an individual with the given unique identifier
+	 *
+	 * @param uniqueIdentifier of the individual to retrieve
+	 * @return the individual with the given unique ID
 	 */
-	public void forEachIndividual(Consumer<Individual> individualConsumer) {
-		for (Individual i : individuals) {
-			individualConsumer.accept(i);
-		}
+	public Individual getIndividual(long uniqueIdentifier) {
+		return individuals.get(uniqueIdentifier);
+	}
+
+
+	/**
+	 * Removes an individual with the given unique identifier
+	 *
+	 * @param uniqueIdentifier of the individual to remove
+	 * @return the removed individual
+	 */
+	public Individual reomveIndividual(long uniqueIdentifier) {
+		return individuals.remove(uniqueIdentifier);
 	}
 
 
@@ -52,12 +69,18 @@ public class World {
 	 * @param toAdd {@link Individual} to add
 	 */
 	public void addIndividual(Individual toAdd) {
-		individuals.add(toAdd);
+		individuals.put(toAdd.getUniqueIdentifier(), toAdd);
 	}
 
 
 	public static class WorldBuilder {
-		private Float gravity;
+		private Float gravity = DEFAULT_GRAVITY;
+
+
+		public static WorldBuilder world() {
+			return new WorldBuilder();
+		}
+
 
 		public WorldBuilder withGravity(float gravity) {
 			this.gravity = gravity;
@@ -72,5 +95,21 @@ public class World {
 
 			return new World(gravity);
 		}
+	}
+
+
+	/**
+	 * @return the gravitational acceleration value
+	 */
+	public float getGravity() {
+		return gravity;
+	}
+
+
+	/**
+	 * @param gravity to set
+	 */
+	public void setGravity(float gravity) {
+		this.gravity = gravity;
 	}
 }

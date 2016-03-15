@@ -15,14 +15,14 @@ public interface Response extends Serializable {
 	 * Called client-side once received
 	 */
 	public void acknowledge(final Connection connection);
-	
-	
+
+
 	/**
 	 * @return whether or not the response should be sent to all
 	 */
 	public boolean replyToAll();
-	
-	
+
+
 	/**
 	 * @return the network protocol used to send the response
 	 */

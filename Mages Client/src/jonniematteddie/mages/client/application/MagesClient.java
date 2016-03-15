@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 
 import jonniematteddie.mages.client.networking.ClientListener;
 import jonniematteddie.mages.networking.NetworkingUtils;
+import jonniematteddie.mages.networking.initialization.InitialConnectionRequest;
 
 /**
  * The game client for Mages
@@ -52,9 +53,21 @@ public class MagesClient implements ApplicationListener {
 		try {
 			client.start();
 			client.connect(10000, address, tcpPort, udpPort);
+
+			// Once connected, request basic information from the server and set up the game world
+			connected();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+
+	/**
+	 * Sends requests to the server for data to set up the game world
+	 *
+	 */
+	private void connected() {
+		NetworkingUtils.sendTCP(new InitialConnectionRequest(), true);
 	}
 
 

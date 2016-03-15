@@ -1,7 +1,8 @@
 package jonniematteddie.mages.server;
 
 import com.google.inject.Guice;
-import com.google.inject.Injector;
+
+import jonniematteddie.mages.framework.InjectionUtilities;
 
 /**
  * Entry point for the server
@@ -15,9 +16,9 @@ public class ServerEntryPoint {
 	 */
 	public static void main(String[] args) throws Exception {
 		// Set up the Injector and start the server
-		Injector injector = Guice.createInjector(new ServerModule());
+		InjectionUtilities.setInjector(Guice.createInjector(new ServerModule()));
 		MagesServer server = MagesServer.server(30122, 30123);
-		injector.injectMembers(server);
+		InjectionUtilities.injectMembers(server);
 		server.start();
 	}
 }

@@ -4,6 +4,9 @@ import com.esotericsoftware.kryonet.Server;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
+import jonniematteddie.mages.world.model.World;
+import jonniematteddie.mages.world.model.World.WorldBuilder;
+
 /**
  * Server {@link Module}
  *
@@ -14,5 +17,6 @@ public class ServerModule implements Module {
 	@Override
 	public void configure(Binder binder) {
 		binder.bind(Server.class).toInstance(new Server());
+		binder.bind(World.class).toInstance(WorldBuilder.world().build());
 	}
 }

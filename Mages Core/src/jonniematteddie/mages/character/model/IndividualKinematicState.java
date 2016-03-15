@@ -1,5 +1,7 @@
 package jonniematteddie.mages.character.model;
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -7,7 +9,8 @@ import com.badlogic.gdx.math.Vector2;
  *
  * @author Matt
  */
-public class IndividualKinematicState {
+public class IndividualKinematicState implements Serializable {
+	private static final long serialVersionUID = -856618512716800829L;
 	private final Vector2 position, velocity, acceleration;
 
 	/**

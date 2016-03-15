@@ -19,10 +19,6 @@ import jonniematteddie.mages.server.networking.ServerListener;
  * @author Matt
  */
 public class MagesServer {
-	private final int tcpPort;
-	private final int udpPort;
-
-	private Thread pingThread;
 
 	@Inject
 	private Server server;
@@ -32,6 +28,11 @@ public class MagesServer {
 
 	@Inject
 	private ServerListener serverListener;
+
+	private final int tcpPort;
+	private final int udpPort;
+
+	private Thread pingThread;
 
 	/**
 	 * @param tcpPort port to use for TCP

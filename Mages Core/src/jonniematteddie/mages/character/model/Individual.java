@@ -1,20 +1,26 @@
 package jonniematteddie.mages.character.model;
 
+import java.io.Serializable;
+
 /**
  * Class representing an Individual, player or NPC controlled
  *
  * @author Matt
  */
-public class Individual {
+public class Individual implements Serializable {
+	private static final long serialVersionUID = -7562064661378311140L;
+
 	private final IndividualKinematicState kinematicState;
+	private final long uniqueIdentifier;
 
 	/**
 	 * Private constructor used by a builder
 	 *
 	 * @param kinematicState
 	 */
-	private Individual(IndividualKinematicState kinematicState) {
+	private Individual(IndividualKinematicState kinematicState, long uniqueIdentifier) {
 		this.kinematicState = kinematicState;
+		this.uniqueIdentifier = uniqueIdentifier;
 	}
 
 
@@ -23,6 +29,14 @@ public class Individual {
 	 */
 	public IndividualKinematicState getKinematicState() {
 		return kinematicState;
+	}
+
+
+	/**
+	 * @return the unique identifier associated with this {@link Individual}
+	 */
+	public long getUniqueIdentifier() {
+		return uniqueIdentifier;
 	}
 
 
@@ -44,7 +58,10 @@ public class Individual {
 				throw new IllegalStateException("Kinematic state must not be null");
 			}
 
-			return new Individual(kinematicState);
+			return new Individual(
+				kinematicState,
+				System.currentTimeMillis() // TODO use a incrementing ID generator
+			);
 		}
 	}
 }

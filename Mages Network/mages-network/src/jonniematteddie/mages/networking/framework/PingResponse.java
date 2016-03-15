@@ -15,8 +15,9 @@ public class PingResponse implements Response {
 
 	private long originalSentTime;
 
+	@SuppressWarnings("unused")
 	/** No-arg constructor required for Kryonet */
-	public PingResponse() {}
+	private PingResponse() {}
 
 	public PingResponse(long originalSentTime) {
 		this.originalSentTime = originalSentTime;
