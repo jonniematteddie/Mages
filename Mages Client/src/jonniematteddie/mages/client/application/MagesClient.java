@@ -33,7 +33,7 @@ public class MagesClient implements ApplicationListener {
 		// Bind the input processor
 		Gdx.input.setInputProcessor(clientInputProcessor);
 
-		setupKryonetClient("localhost", 30122, 30123);
+		setupKryonetClient("173.55.119.194", 30122, 30123);
 	}
 
 

@@ -14,7 +14,7 @@ public class Individual implements Serializable {
 	private long uniqueIdentifier;
 	
 	/** No-arg constructor for Kryonet */
-	private Individual() {}
+	public Individual() {}
 
 	/**
 	 * Private constructor used by a builder
