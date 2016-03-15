@@ -20,14 +20,9 @@ import jonniematteddie.mages.server.networking.ServerListener;
  */
 public class MagesServer {
 
-	@Inject
-	private Server server;
-
-	@Inject
-	private ClientPings clientPings;
-
-	@Inject
-	private ServerListener serverListener;
+	@Inject private Server server;
+	@Inject private ClientPings clientPings;
+	@Inject private ServerListener serverListener;
 
 	private final int tcpPort;
 	private final int udpPort;

@@ -60,12 +60,6 @@ public class ServerListener extends Listener {
 			}
 		} else if (received instanceof Response) {
 			((Response) received).acknowledge(connection);
-
-			// TODO - We want the average of the ping for each client ID. maybe average of last 10? last 15?
-			// idk, im not a scientist.
-			if (received instanceof PingResponse) {
-				clientPings.addPing(connection.getID(), (PingResponse) received);
-			}
 		}
 	}
 }

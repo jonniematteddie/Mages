@@ -2,6 +2,7 @@ package jonniematteddie.mages.networking.framework;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkProtocol;
 import jonniematteddie.mages.networking.Response;
 
@@ -14,8 +15,7 @@ public class PingResponse extends Response {
 	private static final long serialVersionUID = 4873021113059919649L;
 
 	private long originalSentTime;
-
-	@SuppressWarnings("unused")
+	
 	/** No-arg constructor required for Kryonet */
 	private PingResponse() {
 		super(0L);
@@ -29,6 +29,7 @@ public class PingResponse extends Response {
 
 	@Override
 	public void acknowledge(final Connection connection) {
+		InjectionUtilities.inject(PingResponseHandler.class).handle(connection.getID(), this);
 		System.out.println("Client: [" + connection.getID() + "], Ping:[" + Long.toString(System.currentTimeMillis() - getOriginalSentTime()) + "]");
 	}
 

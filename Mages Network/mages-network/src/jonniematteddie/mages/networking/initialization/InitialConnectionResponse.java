@@ -18,19 +18,20 @@ public class InitialConnectionResponse extends Response {
 	private static final long serialVersionUID = -3784983356217192464L;
 
 	private World referenceWorld;
-
+	
 	@SuppressWarnings("unused")
 	/** No-arg constructor required for Kryonet */
 	private InitialConnectionResponse() {
 		super(0L);
 	}
 
+	
 	public InitialConnectionResponse(World referenceWorld, long requestID) {
 		super(requestID);
 		this.referenceWorld = referenceWorld;
 	}
 
-
+	
 	@Override
 	public void acknowledge(Connection connection) {
 		// Client receives the world.
