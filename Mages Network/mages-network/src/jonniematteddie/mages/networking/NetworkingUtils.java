@@ -3,6 +3,7 @@ package jonniematteddie.mages.networking;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,6 +41,7 @@ public class NetworkingUtils {
 	public static Collection<Class<?>> getClassesToRegister() {
 		List<Class<?>> classesToRegister = Lists.newLinkedList();
 
+		classesToRegister.add(ConcurrentHashMap.class);
 		classesToRegister.add(DummyResponse.class);
 		classesToRegister.add(MappedKey.class);
 		classesToRegister.add(KeyPressedRequest.class);

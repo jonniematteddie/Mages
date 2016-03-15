@@ -2,6 +2,7 @@ package jonniematteddie.mages.world.model;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import com.google.common.collect.Maps;
@@ -20,10 +21,15 @@ public class World implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static float DEFAULT_GRAVITY = 9.81f;
 
-	private final Map<Long, Individual> individuals = Maps.newHashMap();
-	private final Map<Integer, Long> playerControlledIndividuals = Maps.newHashMap();
+	private final Map<Long, Individual> individuals = Maps.newConcurrentMap();
+	private final Map<Integer, Long> playerControlledIndividuals = Maps.newConcurrentMap();
 
 	private float gravity;
+
+	/**
+	 * The frame number defines the game 'time'
+	 */
+	private AtomicLong frameNumber;
 
 	/** No-arg constructor for Kryonet */
 	private World() {}
@@ -35,6 +41,15 @@ public class World implements Serializable {
 	 */
 	private World(float gravity) {
 		this.gravity = gravity;
+		this.frameNumber.set(System.currentTimeMillis());
+	}
+
+
+	/**
+	 * @return see {@link #frameNumber}
+	 */
+	public long getFrameNumber() {
+		return frameNumber.get();
 	}
 
 

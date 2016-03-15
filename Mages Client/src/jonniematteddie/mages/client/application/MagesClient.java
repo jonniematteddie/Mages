@@ -9,9 +9,11 @@ import com.google.inject.Inject;
 import jonniematteddie.mages.client.graphics.GraphicsUtilities;
 import jonniematteddie.mages.client.networking.ClientListener;
 import jonniematteddie.mages.client.networking.ClientNetworkUtils;
+import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.initialization.SyncWorldRequest;
 import jonniematteddie.mages.world.model.World;
+import jonniematteddie.mages.world.service.WorldUpdateService;
 
 /**
  * The game client for Mages
@@ -68,10 +70,11 @@ public class MagesClient implements ApplicationListener {
 	private void connected() {
 		clientNetworkUtils.sendTCPSynchronous(new SyncWorldRequest(), 10000);
 
-//		WorldUpdateService.getWorldUpdateThread(
-//			InjectionUtilities.inject(WorldUpdateService.class),
-//			InjectionUtilities.inject(World.class)
-//		).start();
+		// Start the client prediction thread (update thread)
+		WorldUpdateService.getWorldUpdateThread(
+			InjectionUtilities.inject(WorldUpdateService.class),
+			InjectionUtilities.inject(World.class)
+		).start();
 	}
 
 
