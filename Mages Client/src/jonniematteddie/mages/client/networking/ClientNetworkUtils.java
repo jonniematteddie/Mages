@@ -43,4 +43,17 @@ public class ClientNetworkUtils {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Attempts to notify an asynchronous {@link Request} that is waiting to be notified.
+	 * 
+	 * @param response received
+	 */
+	public static void notifyAsyncRequests(Response response) {
+		Request request = outstandingSynchronousRequests.get(response.getRequestID());
+		if (request != null) {
+			request.notify();
+		}
+	}
 }

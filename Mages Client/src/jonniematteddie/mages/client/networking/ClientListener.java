@@ -39,6 +39,8 @@ public class ClientListener extends Listener {
 		} else if (received instanceof Response) {
 			Response response = (Response) received;
 			response.acknowledge(connection);
+			
+			ClientNetworkUtils.notifyAsyncRequests(response);
 		}
 	}
 }
