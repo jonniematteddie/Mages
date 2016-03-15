@@ -23,7 +23,7 @@ public class PingRequest extends Request {
 	
 
 	@Override
-	public Response respond() {
+	public Response prepareResponse() {
 		return new PingResponse(sentTime, getRequestId());
 	}
 

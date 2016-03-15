@@ -36,7 +36,7 @@ public abstract class Request implements Serializable {
 	/**
 	 * @return the {@link Response} the receiver sends back to the requester.
 	 */
-	public abstract Response respond();
+	public abstract Response prepareResponse();
 
 
 	/**

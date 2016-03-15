@@ -21,7 +21,7 @@ public class InitialConnectionRequest extends Request {
 
 
 	@Override
-	public Response respond() {
+	public Response prepareResponse() {
 		return new InitialConnectionResponse(InjectionUtilities.inject(World.class), getRequestId());
 	}
 

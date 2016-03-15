@@ -37,7 +37,7 @@ public class ServerListener extends Listener {
 
 			request.receive();
 
-			Response response = request.respond();
+			Response response = request.prepareResponse();
 
 			if (response.replyToAll()) {
 				switch (response.getProtocol()) {

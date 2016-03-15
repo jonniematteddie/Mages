@@ -27,7 +27,7 @@ public class ClientListener extends Listener {
 
 			request.receive();
 
-			Response response = request.respond();
+			Response response = request.prepareResponse();
 			switch (response.getProtocol()) {
 			case TCP:
 				client.sendTCP(response);
