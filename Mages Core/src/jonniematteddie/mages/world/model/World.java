@@ -21,6 +21,9 @@ public class World implements Serializable {
 
 	private final Map<Long, Individual> individuals = Maps.newConcurrentMap();
 	private float gravity;
+	
+	/** No-arg constructor for Kryonet */
+	private World() {}
 
 	/**
 	 * Private constructor, used by a builder

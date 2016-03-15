@@ -19,7 +19,6 @@ public class InitialConnectionResponse extends Response {
 
 	private World referenceWorld;
 	
-	@SuppressWarnings("unused")
 	/** No-arg constructor required for Kryonet */
 	private InitialConnectionResponse() {
 		super(0L);

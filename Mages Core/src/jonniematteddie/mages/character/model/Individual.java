@@ -10,8 +10,11 @@ import java.io.Serializable;
 public class Individual implements Serializable {
 	private static final long serialVersionUID = -7562064661378311140L;
 
-	private final IndividualKinematicState kinematicState;
-	private final long uniqueIdentifier;
+	private IndividualKinematicState kinematicState;
+	private long uniqueIdentifier;
+	
+	/** No-arg constructor for Kryonet */
+	private Individual() {}
 
 	/**
 	 * Private constructor used by a builder

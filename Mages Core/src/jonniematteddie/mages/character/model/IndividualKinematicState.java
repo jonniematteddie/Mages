@@ -11,7 +11,10 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class IndividualKinematicState implements Serializable {
 	private static final long serialVersionUID = -856618512716800829L;
-	private final Vector2 position, velocity, acceleration;
+	private Vector2 position, velocity, acceleration;
+	
+	/** No-arg constructor for Kryonet */
+	private IndividualKinematicState() {}
 
 	/**
 	 * Private constructor, used only by a builder
