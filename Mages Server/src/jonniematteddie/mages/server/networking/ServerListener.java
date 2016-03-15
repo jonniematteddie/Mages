@@ -48,7 +48,7 @@ public class ServerListener extends Listener {
 	@Override
 	public void disconnected (Connection connection) {
 		clientPings.removePing(connection.getID());
-		world.removePlayerControlledIndividual(connection.getID());
+		world.removeIndividual(world.removePlayerControlledIndividual(connection.getID()));
 	}
 
 
