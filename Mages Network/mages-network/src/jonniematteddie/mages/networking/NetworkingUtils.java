@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.esotericsoftware.kryonet.Client;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.framework.PingRequest;
 import jonniematteddie.mages.networking.framework.PingResponse;
 
@@ -26,7 +24,6 @@ public class NetworkingUtils {
 	 */
 	private static ExecutorService networkThreadpool = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("networking-thread-%d").build());
 	
-	
 	/**
 	 * @return A list of classes to register for network serialization
 	 */
@@ -39,27 +36,5 @@ public class NetworkingUtils {
 		classesToRegister.add(Response.class);
 
 		return classesToRegister;
-	}
-
-
-	/**
-	 * Sends a request, either synchronously or asynchronously
-	 *
-	 * @param requestToSend
-	 * @param synchronous whether or not the {@link Request} thread should wait until a {@link Response} is received and acknowledged
-	 */
-	public static void sendTCP(Request requestToSend, boolean synchronous) {
-		requestToSend.prepare();
-		
-		InjectionUtilities.inject(Client.class).sendTCP(requestToSend);
-		if (synchronous) {
-			synchronized(requestToSend) {
-				try {
-					requestToSend.wait();
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
 	}
 }

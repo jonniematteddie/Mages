@@ -8,7 +8,6 @@ import com.google.inject.Singleton;
 
 import jonniematteddie.mages.networking.Request;
 import jonniematteddie.mages.networking.Response;
-import jonniematteddie.mages.networking.framework.PingResponse;
 
 /**
  * Mages Client specific implementation of {@link Listener}

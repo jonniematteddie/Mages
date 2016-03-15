@@ -8,6 +8,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Inject;
 
 import jonniematteddie.mages.client.networking.ClientListener;
+import jonniematteddie.mages.client.networking.ClientNetworkUtils;
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.initialization.InitialConnectionRequest;
 
@@ -67,7 +68,7 @@ public class MagesClient implements ApplicationListener {
 	 *
 	 */
 	private void connected() {
-		NetworkingUtils.sendTCP(new InitialConnectionRequest(), true);
+		ClientNetworkUtils.sendTCP(new InitialConnectionRequest(), true, 10000);
 	}
 
 
