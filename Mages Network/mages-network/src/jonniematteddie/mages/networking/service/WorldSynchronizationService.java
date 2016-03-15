@@ -33,7 +33,7 @@ public class WorldSynchronizationService {
 			if (clientIndividual == null) {
 				toSync.addIndividual(serverIndividual);
 			} else {
-				individualSynchronizationService.sync(serverIndividual, null);
+				individualSynchronizationService.sync(clientIndividual, serverIndividual);
 			}
 		});
 

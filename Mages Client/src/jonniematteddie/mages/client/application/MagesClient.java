@@ -3,14 +3,17 @@ package jonniematteddie.mages.client.application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Inject;
 
+import jonniematteddie.mages.client.graphics.GraphicsUtilities;
 import jonniematteddie.mages.client.networking.ClientListener;
 import jonniematteddie.mages.client.networking.ClientNetworkUtils;
 import jonniematteddie.mages.networking.NetworkingUtils;
-import jonniematteddie.mages.networking.initialization.InitialConnectionRequest;
+import jonniematteddie.mages.networking.initialization.SyncWorldRequest;
+import jonniematteddie.mages.world.model.World;
 
 /**
  * The game client for Mages
@@ -27,6 +30,9 @@ public class MagesClient implements ApplicationListener {
 
 	/** The {@link Listener} used by the Kryonet client */
 	@Inject private ClientListener clientListener;
+
+	/** The World */
+	@Inject private World world;
 
 	@Override
 	public void create() {
@@ -68,7 +74,12 @@ public class MagesClient implements ApplicationListener {
 	 *
 	 */
 	private void connected() {
-		ClientNetworkUtils.sendTCP(new InitialConnectionRequest(), true, 10000);
+		ClientNetworkUtils.sendTCPSynchronous(new SyncWorldRequest(), 10000);
+
+//		WorldUpdateService.getWorldUpdateThread(
+//			InjectionUtilities.inject(WorldUpdateService.class),
+//			InjectionUtilities.inject(World.class)
+//		).start();
 	}
 
 
@@ -80,7 +91,25 @@ public class MagesClient implements ApplicationListener {
 
 	@Override
 	public void render() {
+		GraphicsUtilities.clear();
+		GraphicsUtilities.getShaperenderer().begin(ShapeType.Filled);
+		world.forEachIndividual(individual -> {
+			GraphicsUtilities.getShaperenderer().circle(
+				individual.getKinematicState().getPosition().x,
+				individual.getKinematicState().getPosition().y,
+				3f
+			);
+		});
+		GraphicsUtilities.getShaperenderer().end();
+
+		// Sync world every 1s
+		i++;
+		if (i == 60) {
+			ClientNetworkUtils.sendTCPAsynchronous(new SyncWorldRequest());
+			i = 0;
+		}
 	}
+	int i;
 
 
 	@Override

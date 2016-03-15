@@ -10,22 +10,22 @@ import jonniematteddie.mages.networking.service.WorldSynchronizationService;
 import jonniematteddie.mages.world.model.World;
 
 /**
- * {@link Response} sent by the server to the client upon receiving a {@link InitialConnectionRequest}
+ * {@link Response} sent by the server to the client upon receiving a {@link SyncWorldRequest}
  *
  * @author Matt
  */
-public class InitialConnectionResponse extends Response {
+public class SyncWorldResponse extends Response {
 	private static final long serialVersionUID = -3784983356217192464L;
 
 	private World referenceWorld;
 	
 	/** No-arg constructor required for Kryonet */
-	private InitialConnectionResponse() {
+	private SyncWorldResponse() {
 		super(0L);
 	}
 
 	
-	public InitialConnectionResponse(World referenceWorld, long requestID) {
+	public SyncWorldResponse(World referenceWorld, long requestID) {
 		super(requestID);
 		this.referenceWorld = referenceWorld;
 	}

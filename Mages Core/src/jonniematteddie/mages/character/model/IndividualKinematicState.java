@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 public class IndividualKinematicState implements Serializable {
 	private static final long serialVersionUID = -856618512716800829L;
 	private Vector2 position, velocity, acceleration;
-	
+
 	/** No-arg constructor for Kryonet */
 	private IndividualKinematicState() {}
 
@@ -45,6 +45,11 @@ public class IndividualKinematicState implements Serializable {
 	}
 
 
+	public IndividualKinematicState copy() {
+		return new IndividualKinematicState(position.cpy(), velocity.cpy(), acceleration.cpy());
+	}
+
+
 	/**
 	 * Builder of {@link IndividualKinematicState}
 	 *
@@ -52,7 +57,7 @@ public class IndividualKinematicState implements Serializable {
 	 */
 	public static final class IndividualKinematicStateBuilder {
 		private Vector2 position, velocity, acceleration;
-		
+
 		public static IndividualKinematicStateBuilder builder() {
 			return new IndividualKinematicStateBuilder();
 		}

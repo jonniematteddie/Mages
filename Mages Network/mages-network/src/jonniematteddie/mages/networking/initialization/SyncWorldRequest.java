@@ -6,11 +6,11 @@ import jonniematteddie.mages.networking.Response;
 import jonniematteddie.mages.world.model.World;
 
 /**
- * {@link Request} made by the client when it connects to the server. Performs basic setup
+ * {@link Request} made by the client to request a sync with server world
  *
  * @author Matt
  */
-public class InitialConnectionRequest extends Request {
+public class SyncWorldRequest extends Request {
 	private static final long serialVersionUID = -8966601831465936709L;
 
 
@@ -22,7 +22,7 @@ public class InitialConnectionRequest extends Request {
 
 	@Override
 	public Response prepareResponse() {
-		return new InitialConnectionResponse(InjectionUtilities.inject(World.class), getRequestId());
+		return new SyncWorldResponse(InjectionUtilities.inject(World.class), getRequestId());
 	}
 
 

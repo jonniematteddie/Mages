@@ -19,9 +19,9 @@ public class World implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static float DEFAULT_GRAVITY = 9.81f;
 
-	private final Map<Long, Individual> individuals = Maps.newConcurrentMap();
+	private final Map<Long, Individual> individuals = Maps.newHashMap();
 	private float gravity;
-	
+
 	/** No-arg constructor for Kryonet */
 	private World() {}
 

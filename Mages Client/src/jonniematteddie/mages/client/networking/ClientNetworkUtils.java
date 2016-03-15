@@ -15,39 +15,49 @@ import jonniematteddie.mages.networking.Response;
  * @author Matt
  */
 public class ClientNetworkUtils {
-	
+
 	/**
 	 * Map containing all {@link Request}s that are blocked and waiting for a response
 	 */
 	private static Map<Long, Request> outstandingSynchronousRequests = Maps.newConcurrentMap();
 
 	/**
-	 * Sends a request, either synchronously or asynchronously
+	 * Sends a request, synchronously
+	 * The {@link Request} thread will wait until a {@link Response} is received and acknowledged
 	 *
 	 * @param requestToSend
-	 * @param synchronous whether or not the {@link Request} thread should wait until a {@link Response} is received and acknowledged
 	 * @param timeout if this is a synchronous request, the timeout will dictate the time elapsed until we give up waiting for a response
 	 */
-	public static void sendTCP(Request requestToSend, boolean synchronous, long timeout) {
+	public static void sendTCPSynchronous(Request requestToSend, long timeout) {
 		requestToSend.prepare();
-		
+
 		InjectionUtilities.inject(Client.class).sendTCP(requestToSend);
-		if (synchronous) {
-			outstandingSynchronousRequests.put(requestToSend.getRequestId(), requestToSend);
-			synchronized(requestToSend) {
-				try {
-					requestToSend.wait();
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+		outstandingSynchronousRequests.put(requestToSend.getRequestId(), requestToSend);
+		synchronized(requestToSend) {
+			// TODO implement timeout
+			try {
+				requestToSend.wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}
-	
-	
+
+
+	/**
+	 * Sends a request, asynchronously
+	 *
+	 * @param requestToSend
+	 */
+	public static void sendTCPAsynchronous(Request requestToSend) {
+		requestToSend.prepare();
+		InjectionUtilities.inject(Client.class).sendTCP(requestToSend);
+	}
+
+
 	/**
 	 * Attempts to notify an asynchronous {@link Request} that is waiting to be notified.
-	 * 
+	 *
 	 * @param response received
 	 */
 	public static void notifyAsyncRequests(Response response) {

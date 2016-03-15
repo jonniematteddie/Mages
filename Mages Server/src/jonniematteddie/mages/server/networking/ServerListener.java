@@ -39,8 +39,8 @@ public class ServerListener extends Listener {
 				.withKinematicState(
 					IndividualKinematicStateBuilder.builder()
 						.withPosition(new Vector2())
-						.withVelocity(new Vector2())
-						.withAcceleration(new Vector2())
+						.withVelocity(new Vector2(10, 10))
+						.withAcceleration(new Vector2(0, -2))
 					.build()
 				)
 			.build()
