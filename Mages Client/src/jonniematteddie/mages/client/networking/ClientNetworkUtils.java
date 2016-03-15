@@ -51,7 +51,7 @@ public class ClientNetworkUtils {
 	 * @param response received
 	 */
 	public static void notifyAsyncRequests(Response response) {
-		Request request = outstandingSynchronousRequests.get(response.getRequestID());
+		Request request = outstandingSynchronousRequests.remove(response.getRequestID());
 		if (request != null) {
 			request.notify();
 		}
