@@ -71,7 +71,15 @@ public class MagesClient implements ApplicationListener {
 	private void connected() {
 		clientNetworkUtils.sendTCPSynchronous(new SyncWorldRequest(), 10000);
 
-		// Start the client prediction thread (update thread)
+//		enabledInterpoliation();
+	}
+
+
+	/**
+	 * Sets up a thread that updates the client world, effectively enabling interpolation
+	 */
+	private void enabledInterpoliation() {
+		// Start the client interpolation thread (update thread)
 		WorldUpdateService.getWorldUpdateThread(
 			InjectionUtilities.inject(WorldUpdateService.class),
 			InjectionUtilities.inject(World.class)
