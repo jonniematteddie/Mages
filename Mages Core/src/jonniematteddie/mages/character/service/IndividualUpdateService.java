@@ -33,7 +33,7 @@ public class IndividualUpdateService {
 
 		return newState;
 	}
-
+	
 
 	/**
 	 * Updates the given {@link Individual}, updating all fields
@@ -41,7 +41,7 @@ public class IndividualUpdateService {
 	 * @param individual to update
 	 * @param numberOfFrames the number of frames to update by
 	 */
-	public void updateIndividual(Individual individual, long fromFrameNumber, int numberOfFrames) {
+	public void updateIndividual(Individual individual, int numberOfFrames) {
 		IndividualKinematicState updatedKinematics = updateKinematics(individual, numberOfFrames);
 
 		individual.getKinematicState().getPosition().set(updatedKinematics.getPosition());

@@ -5,7 +5,9 @@ import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 
+import jonniematteddie.mages.client.networking.framework.ClientIDProviderImpl;
 import jonniematteddie.mages.client.networking.framework.ClientPingResponseHandler;
+import jonniematteddie.mages.networking.framework.ClientIDProvider;
 import jonniematteddie.mages.networking.framework.PingResponseHandler;
 import jonniematteddie.mages.world.model.World;
 import jonniematteddie.mages.world.model.World.WorldBuilder;
@@ -23,5 +25,6 @@ public class ClientModule implements Module {
 		binder.bind(Client.class).toInstance(new Client());
 		binder.bind(World.class).toInstance(WorldBuilder.world().build());
 		binder.bind(PingResponseHandler.class).to(ClientPingResponseHandler.class);
+		binder.bind(ClientIDProvider.class).to(ClientIDProviderImpl.class);
 	}
 }

@@ -24,7 +24,7 @@ public class WorldUpdateService {
 	public void updateWorld(World world, int numberOfFrames) {
 		synchronized (world) {
 			world.forEachIndividual(individual -> {
-				individualUpdateService.updateIndividual(individual, world.getFrameNumber(), numberOfFrames);
+				individualUpdateService.updateIndividual(individual, numberOfFrames);
 			});
 		}
 	}

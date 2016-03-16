@@ -6,20 +6,21 @@ import com.google.inject.Singleton;
 import jonniematteddie.mages.world.model.World;
 
 /**
- * Handles {@link KeyPressedRequest} received
+ * Functionally processes controls
  *
  * @author Matt
  */
 @Singleton
-public class ClientInputRequestHandler {
-
+public class MagesInputProcessor {
+	
 	@Inject private World world;
 
-	/**
-	 * @param toHandle
-	 */
-	public void handlePress(KeyPressedRequest toHandle, int clientID) {
-		MappedKey pressed = toHandle.getMappedKey();
+	public boolean keyDown(int keycode, int clientID) {
+		MappedKey pressed = MappedKey.getForKey(keycode);
+		if (pressed == null) {
+			return false;
+		}
+		
 		switch (pressed) {
 			case MOVE_DOWN:
 				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().y = -40;
@@ -36,10 +37,16 @@ public class ClientInputRequestHandler {
 			default:
 				break;
 		}
+		return true;
 	}
 
-	public void handleRelease(KeyPressedRequest toHandle, int clientID) {
-		MappedKey pressed = toHandle.getMappedKey();
+	
+	public boolean keyUp(int keycode, int clientID) {
+		MappedKey pressed = MappedKey.getForKey(keycode);
+		if (pressed == null) {
+			return false;
+		}
+		
 		switch (pressed) {
 			case MOVE_DOWN:
 				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().y = 0;
@@ -56,5 +63,36 @@ public class ClientInputRequestHandler {
 			default:
 				break;
 		}
+		return true;
+	}
+
+	
+	public boolean keyTyped(char character, int clientID) {
+		return false;
+	}
+
+	
+	public boolean touchDown(int screenX, int screenY, int pointer, int button, int clientID) {
+		return false;
+	}
+
+	
+	public boolean touchUp(int screenX, int screenY, int pointer, int button, int clientID) {
+		return false;
+	}
+
+
+	public boolean touchDragged(int screenX, int screenY, int pointer, int clientID) {
+		return false;
+	}
+
+
+	public boolean mouseMoved(int screenX, int screenY, int clientID) {
+		return false;
+	}
+
+
+	public boolean scrolled(int amount, int clientID) {
+		return false;
 	}
 }

@@ -14,8 +14,7 @@ import jonniematteddie.mages.world.model.World;
 @Singleton
 public class WorldSynchronizationService {
 
-	@Inject
-	private IndividualSynchronizationService individualSynchronizationService;
+	@Inject	private IndividualSynchronizationService individualSynchronizationService;
 
 	/**
 	 * Synchronises a given {@link World} with a reference {@link World}

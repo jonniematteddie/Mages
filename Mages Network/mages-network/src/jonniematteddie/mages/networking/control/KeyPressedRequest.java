@@ -34,9 +34,9 @@ public class KeyPressedRequest extends Request {
 	@Override
 	public void receive() {
 		if (pressed) {
-			InjectionUtilities.inject(ClientInputRequestHandler.class).handlePress(this, getClientId());
+			InjectionUtilities.inject(InputRequestHandler.class).handlePress(this, getClientId());
 		} else {
-			InjectionUtilities.inject(ClientInputRequestHandler.class).handleRelease(this, getClientId());
+			InjectionUtilities.inject(InputRequestHandler.class).handleRelease(this, getClientId());
 		}
 	}
 
