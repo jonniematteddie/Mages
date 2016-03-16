@@ -35,7 +35,7 @@ public class SyncWorldNotification implements Notification {
 		InjectionUtilities.inject(WorldSynchronizationService.class).sync(
 			InjectionUtilities.inject(World.class),
 			referenceWorld,
-			ping/2
+			ping
 		);
 	}
 }

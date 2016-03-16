@@ -26,7 +26,7 @@ public class ClientPings {
 	 * @param pingResponse to add
 	 */
 	public void addPing(int clientId, PingResponse pingResponse) {
-		clientPings.put(clientId, System.currentTimeMillis() - pingResponse.getOriginalSentTime());
+		clientPings.put(clientId, (System.currentTimeMillis() - pingResponse.getOriginalSentTime()) / 2);
 	}
 
 
