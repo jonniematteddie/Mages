@@ -25,6 +25,7 @@ public class WorldSynchronizationService {
 	 */
 	public void sync(World toSync, World referenceWorld) {
 		toSync.setGravity(referenceWorld.getGravity());
+		toSync.setFrameNumber(referenceWorld.getFrameNumber());
 
 		// For each individual in the reference world, synchronize with the client counterpart.
 		// If client does not contain the individual, add it

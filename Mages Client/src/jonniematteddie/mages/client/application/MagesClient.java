@@ -11,6 +11,7 @@ import jonniematteddie.mages.client.networking.ClientListener;
 import jonniematteddie.mages.client.networking.ClientNetworkUtils;
 import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkingUtils;
+import jonniematteddie.mages.networking.framework.PingRequest;
 import jonniematteddie.mages.networking.initialization.SyncWorldRequest;
 import jonniematteddie.mages.world.model.World;
 import jonniematteddie.mages.world.service.WorldUpdateService;
@@ -80,7 +81,6 @@ public class MagesClient implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 	}
 
 
@@ -101,6 +101,7 @@ public class MagesClient implements ApplicationListener {
 		i++;
 		if (i == 10) {
 			clientNetworkUtils.sendTCPAsynchronous(new SyncWorldRequest());
+			clientNetworkUtils.sendTCPAsynchronous(new PingRequest());
 			i = 0;
 		}
 	}
@@ -109,18 +110,15 @@ public class MagesClient implements ApplicationListener {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 	}
 
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 	}
 
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 	}
 }

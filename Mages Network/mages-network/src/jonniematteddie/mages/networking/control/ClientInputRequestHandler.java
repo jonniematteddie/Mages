@@ -22,16 +22,16 @@ public class ClientInputRequestHandler {
 		MappedKey pressed = toHandle.getMappedKey();
 		switch (pressed) {
 			case MOVE_DOWN:
-				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().y = -10;
+				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().y = -40;
 				break;
 			case MOVE_LEFT:
-				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().x = -10;
+				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().x = -40;
 				break;
 			case MOVE_RIGHT:
-				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().x = 10;
+				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().x = 40;
 				break;
 			case MOVE_UP:
-				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().y = 10;
+				world.getClientControlledIndividual(clientID).getKinematicState().getVelocity().y = 40;
 				break;
 			default:
 				break;

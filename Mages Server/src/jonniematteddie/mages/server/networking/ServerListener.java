@@ -10,6 +10,7 @@ import com.google.inject.Singleton;
 import jonniematteddie.mages.character.model.IndividualKinematicState.IndividualKinematicStateBuilder;
 import jonniematteddie.mages.character.model.PlayerControlledIndividual.PlayerControlledIndividualBuilder;
 import jonniematteddie.mages.framework.InjectionUtilities;
+import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.Request;
 import jonniematteddie.mages.networking.Response;
 import jonniematteddie.mages.world.model.World;
@@ -54,34 +55,34 @@ public class ServerListener extends Listener {
 
 	@Override
 	public void received(final Connection connection, final Object received) {
-		if (received instanceof Request) {
-			Request request = (Request) received;
+		NetworkingUtils.run(() -> {
+			if (received instanceof Request) {
+				Request request = (Request) received;
+				request.receive();
+				Response response = request.prepareResponse();
 
-			request.receive();
-
-			Response response = request.prepareResponse();
-
-			if (response.replyToAll()) {
-				switch (response.getProtocol()) {
-				case TCP:
-					server.sendToAllTCP(response);
-					break;
-				case UDP:
-					server.sendToAllUDP(response);
-					break;
+				if (response.replyToAll()) {
+					switch (response.getProtocol()) {
+					case TCP:
+						server.sendToAllTCP(response);
+						break;
+					case UDP:
+						server.sendToAllUDP(response);
+						break;
+					}
+				} else {
+					switch (response.getProtocol()) {
+					case TCP:
+						server.sendToTCP(connection.getID(), response);
+						break;
+					case UDP:
+						server.sendToUDP(connection.getID(), response);
+						break;
+					}
 				}
-			} else {
-				switch (response.getProtocol()) {
-				case TCP:
-					server.sendToTCP(connection.getID(), response);
-					break;
-				case UDP:
-					server.sendToUDP(connection.getID(), response);
-					break;
-				}
+			} else if (received instanceof Response) {
+				((Response) received).acknowledge(connection);
 			}
-		} else if (received instanceof Response) {
-			((Response) received).acknowledge(connection);
-		}
+		});
 	}
 }

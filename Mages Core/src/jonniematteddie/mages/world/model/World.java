@@ -29,7 +29,7 @@ public class World implements Serializable {
 	/**
 	 * The frame number defines the game 'time'
 	 */
-	private AtomicLong frameNumber;
+	private AtomicLong frameNumber = new AtomicLong();
 
 	/** No-arg constructor for Kryonet */
 	private World() {}
@@ -50,6 +50,14 @@ public class World implements Serializable {
 	 */
 	public long getFrameNumber() {
 		return frameNumber.get();
+	}
+
+
+	/**
+	 * @return see {@link #frameNumber}
+	 */
+	public void setFrameNumber(long value) {
+		frameNumber.set(value);
 	}
 
 

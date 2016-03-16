@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.collect.Lists;
@@ -35,12 +36,22 @@ public class NetworkingUtils {
 	 */
 	private static ExecutorService networkThreadpool = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("networking-thread-%d").build());
 
+
+	/**
+	 * Submit a task to be run in the networked threadpool
+	 */
+	public static void run(Runnable r) {
+		networkThreadpool.submit(r);
+	}
+
+
 	/**
 	 * @return A list of classes to register for network serialization
 	 */
 	public static Collection<Class<?>> getClassesToRegister() {
 		List<Class<?>> classesToRegister = Lists.newLinkedList();
 
+		classesToRegister.add(AtomicLong.class);
 		classesToRegister.add(ConcurrentHashMap.class);
 		classesToRegister.add(DummyResponse.class);
 		classesToRegister.add(MappedKey.class);
