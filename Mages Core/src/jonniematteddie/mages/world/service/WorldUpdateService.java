@@ -22,9 +22,11 @@ public class WorldUpdateService {
 	 * @param numberOfFrames the number of frames to update by
 	 */
 	public void updateWorld(World world, int numberOfFrames) {
-		world.forEachIndividual(individual -> {
-			individualUpdateService.updateIndividual(individual, numberOfFrames);
-		});
+		synchronized (world) {
+			world.forEachIndividual(individual -> {
+				individualUpdateService.updateIndividual(individual, numberOfFrames);
+			});
+		}
 	}
 
 

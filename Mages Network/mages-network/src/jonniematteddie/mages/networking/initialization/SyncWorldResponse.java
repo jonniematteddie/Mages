@@ -33,11 +33,10 @@ public class SyncWorldResponse extends Response {
 	
 	@Override
 	public void acknowledge(Connection connection) {
-		// Client receives the world.
-		World clientWorld = InjectionUtilities.inject(World.class);
-
-		// Synchronise client world using the reference world
-		InjectionUtilities.inject(WorldSynchronizationService.class).sync(clientWorld, referenceWorld);
+		InjectionUtilities.inject(WorldSynchronizationService.class).sync(
+			InjectionUtilities.inject(World.class), 
+			referenceWorld
+		);
 	}
 
 

@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import jonniematteddie.mages.networking.Notification;
 import jonniematteddie.mages.networking.Request;
 import jonniematteddie.mages.networking.Response;
 
@@ -41,6 +42,8 @@ public class ClientListener extends Listener {
 			response.acknowledge(connection);
 
 			clientNetworkUtils.notifyAsyncRequests(response);
+		} else if (received instanceof Notification) {
+			((Notification) received).receive();
 		}
 	}
 }

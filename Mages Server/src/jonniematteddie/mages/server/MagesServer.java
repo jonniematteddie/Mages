@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.framework.PingRequest;
+import jonniematteddie.mages.networking.sync.SyncWorldNotification;
 import jonniematteddie.mages.server.networking.ServerListener;
 import jonniematteddie.mages.world.model.World;
 import jonniematteddie.mages.world.service.WorldUpdateService;
@@ -29,6 +30,7 @@ public class MagesServer {
 	private final int udpPort;
 
 	private Thread pingThread;
+	private Thread syncThread;
 
 	/**
 	 * @param tcpPort port to use for TCP
@@ -72,8 +74,23 @@ public class MagesServer {
 			InjectionUtilities.inject(WorldUpdateService.class),
 			InjectionUtilities.inject(World.class)
 		).start();
-
 		pingThread.start();
+		
+		syncThread = new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(500);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+
+				World world = InjectionUtilities.inject(World.class);
+				synchronized (world) {
+					server.sendToAllTCP(new SyncWorldNotification(world));
+				}
+			}
+		});
+		syncThread.start();
 
 		server.start();
 		server.bind(tcpPort, udpPort);

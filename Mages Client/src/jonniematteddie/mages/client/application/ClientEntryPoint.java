@@ -18,8 +18,8 @@ public class ClientEntryPoint {
 		cfg.title = "Project Mages";
 		cfg.useGL30 = false;
 		cfg.samples = 4;
-		cfg.width = 100; // TODO Persist config
-		cfg.height = 100; // TODO Persist config
+		cfg.width = 1000; // TODO Persist config
+		cfg.height = 700; // TODO Persist config
 		cfg.fullscreen = false; // TODO Persist config
 		cfg.resizable = true;
 

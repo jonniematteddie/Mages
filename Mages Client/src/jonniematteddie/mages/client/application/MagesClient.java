@@ -11,7 +11,6 @@ import jonniematteddie.mages.client.networking.ClientListener;
 import jonniematteddie.mages.client.networking.ClientNetworkUtils;
 import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkingUtils;
-import jonniematteddie.mages.networking.framework.PingRequest;
 import jonniematteddie.mages.networking.initialization.SyncWorldRequest;
 import jonniematteddie.mages.world.model.World;
 import jonniematteddie.mages.world.service.WorldUpdateService;
@@ -70,15 +69,14 @@ public class MagesClient implements ApplicationListener {
 	 */
 	private void connected() {
 		clientNetworkUtils.sendTCPSynchronous(new SyncWorldRequest(), 10000);
-
-//		enabledInterpoliation();
+		enableInterpolation();
 	}
 
 
 	/**
 	 * Sets up a thread that updates the client world, effectively enabling interpolation
 	 */
-	private void enabledInterpoliation() {
+	private void enableInterpolation() {
 		// Start the client interpolation thread (update thread)
 		WorldUpdateService.getWorldUpdateThread(
 			InjectionUtilities.inject(WorldUpdateService.class),
@@ -104,16 +102,7 @@ public class MagesClient implements ApplicationListener {
 			);
 		});
 		GraphicsUtilities.getShaperenderer().end();
-
-		// Sync world every 1s
-		i++;
-		if (i == 10) {
-			clientNetworkUtils.sendTCPAsynchronous(new SyncWorldRequest());
-			clientNetworkUtils.sendTCPAsynchronous(new PingRequest());
-			i = 0;
-		}
 	}
-	int i;
 
 
 	@Override

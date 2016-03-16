@@ -6,14 +6,22 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import com.google.common.collect.Maps;
+import com.google.inject.Singleton;
 
 import jonniematteddie.mages.character.model.Individual;
 import jonniematteddie.mages.character.model.PlayerControlledIndividual;
+import jonniematteddie.mages.world.service.WorldUpdateService;
 
 /**
  * A {@link World} holds information about:
  *
  * {@link Individual}s within this {@link World}
+ * 
+ * 
+ * NOTES: World is currently bound as a {@link Singleton}, and is accessed by multiple threads.
+ * 
+ * - Synchronized here: {@link WorldUpdateService#updateWorld(World, int)}
+ * - Synchronized here: jonniematteddie.mages.server.MagesServer.start()
  *
  * @author Matt
  */

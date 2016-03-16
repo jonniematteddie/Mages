@@ -22,6 +22,7 @@ import jonniematteddie.mages.networking.framework.PingRequest;
 import jonniematteddie.mages.networking.framework.PingResponse;
 import jonniematteddie.mages.networking.initialization.SyncWorldRequest;
 import jonniematteddie.mages.networking.initialization.SyncWorldResponse;
+import jonniematteddie.mages.networking.sync.SyncWorldNotification;
 import jonniematteddie.mages.world.model.World;
 
 /**
@@ -51,6 +52,8 @@ public class NetworkingUtils {
 	public static Collection<Class<?>> getClassesToRegister() {
 		List<Class<?>> classesToRegister = Lists.newLinkedList();
 
+		classesToRegister.add(Notification.class);
+		classesToRegister.add(SyncWorldNotification.class);
 		classesToRegister.add(AtomicLong.class);
 		classesToRegister.add(ConcurrentHashMap.class);
 		classesToRegister.add(DummyResponse.class);
