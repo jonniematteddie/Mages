@@ -25,7 +25,12 @@ public class WorldSynchronizationService {
 	 */
 	public void sync(World toSync, World referenceWorld) {
 		toSync.setGravity(referenceWorld.getGravity());
-		toSync.setFrameNumber(referenceWorld.getFrameNumber());
+		
+		long referenceFrameNumber = referenceWorld.getFrameNumber();
+		long clientFrameNumber = toSync.getFrameNumber();
+		
+		// Update client frame number
+		toSync.setFrameNumber(referenceFrameNumber);
 
 		// For each individual in the reference world, synchronize with the client counterpart.
 		// If client does not contain the individual, add it
@@ -34,7 +39,7 @@ public class WorldSynchronizationService {
 			if (clientIndividual == null) {
 				toSync.addIndividual(serverIndividual);
 			} else {
-				individualSynchronizationService.sync(clientIndividual, serverIndividual);
+				individualSynchronizationService.sync(clientIndividual, serverIndividual, referenceFrameNumber, referenceFrameNumber - clientFrameNumber);
 			}
 		});
 
