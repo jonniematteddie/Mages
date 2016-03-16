@@ -9,7 +9,7 @@ import jonniematteddie.mages.server.networking.ClientPings;
 
 /**
  * Adds pings to a map of client ID keys.
- * 
+ *
  * @author Eddie
  */
 @Singleton
@@ -22,7 +22,7 @@ public class ServerPingResponseHandler implements PingResponseHandler {
 		this.clientPings = clientPings;
 	}
 
-	
+
 	@Override
 	public void handle(int clientId, PingResponse pingResponse) {
 		clientPings.addPing(clientId, pingResponse);

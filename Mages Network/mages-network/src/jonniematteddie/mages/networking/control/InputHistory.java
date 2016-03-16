@@ -12,11 +12,12 @@ import com.google.inject.Singleton;
  *
  *
  * Graphical example:
- *                                         u              v          w             x
- * Key pressed:         -----A---------B---|----A---------|----------|-------------|------------>
- * Key Released:        ---------A---------|--------------|-------A--|---B---------|------------>
- *                                         |              |          |             |
- * Input History Map:   ----[A]-[ ]---[B]--|---[A,B]------|------[B]-|--[ ]--------|------------>
+ *                                                     u              v          w             x
+ * Key pressed:                     -----A---------B---|----A---------|----------|-------------|------------>
+ * Key Released:                    ---------A---------|--------------|-------A--|---B---------|------------>
+ *                                                     |              |          |             |
+ * Input History key pressed Map:   ----[A]-[ ]---[B]--|---[A,B]------|------[B]-|--[ ]--------|------------>
+ * Input History key released Map:  --------[A]--------|--------------|------[A]-|--[B]--------|------------>
  *
  * The keys pressed at frame number u: [B]
  * The keys pressed at frame number v: [A, B]
@@ -39,7 +40,12 @@ public class InputHistory {
 	/**
 	 * Maps the frame number to the set of keys that are pressed down
 	 */
-	private final ConcurrentSkipListMap<Long, Set<MappedKey>> inputHistory = new ConcurrentSkipListMap<>();
+	private final ConcurrentSkipListMap<Long, Set<MappedKey>> inputHistoryPressed = new ConcurrentSkipListMap<>();
+
+	/**
+	 * Maps the frame number to the set of keys that have been released
+	 */
+	private final ConcurrentSkipListMap<Long, Set<MappedKey>> inputHistoryReleased = new ConcurrentSkipListMap<>();
 
 
 	/**
@@ -48,8 +54,11 @@ public class InputHistory {
 	 * @param frameNumber to use as a reference point
 	 */
 	private void purge(long frameNumber) {
-		inputHistory.headMap(frameNumber - MAXIMUM_HISTORIC_FRAMES).keySet().forEach(frame -> {
-			inputHistory.remove(frame);
+		inputHistoryPressed.headMap(frameNumber - MAXIMUM_HISTORIC_FRAMES).keySet().forEach(frame -> {
+			inputHistoryPressed.remove(frame);
+		});
+		inputHistoryReleased.headMap(frameNumber - MAXIMUM_HISTORIC_FRAMES).keySet().forEach(frame -> {
+			inputHistoryReleased.remove(frame);
 		});
 	}
 
@@ -58,11 +67,23 @@ public class InputHistory {
 	 * The current pressed keys are given by the {@link Set} returned as a result of calling {@link ConcurrentSkipListMap#floorEntry(Object)} on the {@link #inputHistory} map
 	 *
 	 * @param frameNumber to get pressed keys at
-	 * @return
+	 * @return set of keys held down at a given frame
 	 */
 	public Set<MappedKey> getPressedKeys(long frameNumber) {
-		Entry<Long, Set<MappedKey>> floor = inputHistory.floorEntry(frameNumber);
+		Entry<Long, Set<MappedKey>> floor = inputHistoryPressed.floorEntry(frameNumber);
 		return floor == null ? Sets.newConcurrentHashSet() : floor.getValue();
+	}
+
+
+	/**
+	 * The keys that were released at a given frame
+	 *
+	 * @param frameNumber to get released keys at
+	 * @return set of {@link MappedKey} that have been released at a given frame
+	 */
+	public Set<MappedKey> getReleasedKeys(long frameNumber) {
+		Set<MappedKey> released = inputHistoryReleased.get(frameNumber);
+		return released == null ? Sets.newHashSet() : released;
 	}
 
 
@@ -74,18 +95,18 @@ public class InputHistory {
 	 */
 	public void keyPressed(long frameNumber, MappedKey pressed) {
 		purge(frameNumber);
-		if (inputHistory.containsKey(frameNumber)) {
-			inputHistory.get(frameNumber).add(pressed);
+		if (inputHistoryPressed.containsKey(frameNumber)) {
+			inputHistoryPressed.get(frameNumber).add(pressed);
 		} else {
 			Set<MappedKey> newPressedKeys = Sets.newConcurrentHashSet();
-			Entry<Long, Set<MappedKey>> currentPressedKeys = inputHistory.floorEntry(frameNumber);
+			Entry<Long, Set<MappedKey>> currentPressedKeys = inputHistoryPressed.floorEntry(frameNumber);
 
 			if (currentPressedKeys != null) {
 				newPressedKeys.addAll(currentPressedKeys.getValue());
 			}
 
 			newPressedKeys.add(pressed);
-			inputHistory.put(frameNumber, newPressedKeys);
+			inputHistoryPressed.put(frameNumber, newPressedKeys);
 		}
 	}
 
@@ -98,18 +119,27 @@ public class InputHistory {
 	 */
 	public void keyReleased(long frameNumber, MappedKey pressed) {
 		purge(frameNumber);
-		if (inputHistory.containsKey(frameNumber)) {
-			inputHistory.get(frameNumber).remove(pressed);
+		if (inputHistoryPressed.containsKey(frameNumber)) {
+			inputHistoryPressed.get(frameNumber).remove(pressed);
 		} else {
 			Set<MappedKey> newPressedKeys = Sets.newConcurrentHashSet();
-			Entry<Long, Set<MappedKey>> currentPressedKeys = inputHistory.floorEntry(frameNumber);
+			Entry<Long, Set<MappedKey>> currentPressedKeys = inputHistoryPressed.floorEntry(frameNumber);
 
 			if (currentPressedKeys != null) {
 				newPressedKeys.addAll(currentPressedKeys.getValue());
 			}
 
 			newPressedKeys.remove(pressed);
-			inputHistory.put(frameNumber, newPressedKeys);
+			inputHistoryPressed.put(frameNumber, newPressedKeys);
+		}
+
+		if (inputHistoryReleased.containsKey(frameNumber)) {
+			inputHistoryReleased.get(frameNumber).add(pressed);
+		} else {
+			Set<MappedKey> newConcurrentHashSet = Sets.newConcurrentHashSet();
+			newConcurrentHashSet.add(pressed);
+
+			inputHistoryReleased.put(frameNumber, newConcurrentHashSet);
 		}
 	}
 }

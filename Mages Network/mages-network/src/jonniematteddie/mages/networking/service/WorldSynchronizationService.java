@@ -21,15 +21,13 @@ public class WorldSynchronizationService {
 	 *
 	 * @param toSync world to sync
 	 * @param referenceWorld world to use as reference
+	 * @param ping the one-way ping between client/server
 	 */
-	public void sync(World toSync, World referenceWorld) {
+	public void sync(World toSync, World referenceWorld, int ping) {
 		toSync.setGravity(referenceWorld.getGravity());
-		
-		long referenceFrameNumber = referenceWorld.getFrameNumber();
-		long clientFrameNumber = toSync.getFrameNumber();
-		
+
 		// Update client frame number
-		toSync.setFrameNumber(referenceFrameNumber);
+		toSync.setFrameNumber(referenceWorld.getFrameNumber());
 
 		// For each individual in the reference world, synchronize with the client counterpart.
 		// If client does not contain the individual, add it
@@ -38,7 +36,7 @@ public class WorldSynchronizationService {
 			if (clientIndividual == null) {
 				toSync.addIndividual(serverIndividual);
 			} else {
-				individualSynchronizationService.sync(clientIndividual, serverIndividual, referenceFrameNumber, referenceFrameNumber - clientFrameNumber);
+				individualSynchronizationService.sync(clientIndividual, serverIndividual, referenceWorld.getFrameNumber(), ping/16);
 			}
 		});
 

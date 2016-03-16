@@ -26,6 +26,8 @@ public class WorldUpdateService {
 			world.forEachIndividual(individual -> {
 				individualUpdateService.updateIndividual(individual, numberOfFrames);
 			});
+
+			world.setFrameNumber(world.getFrameNumber() + 1);
 		}
 	}
 

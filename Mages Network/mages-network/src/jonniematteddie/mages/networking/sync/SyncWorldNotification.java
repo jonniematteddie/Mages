@@ -13,12 +13,14 @@ import jonniematteddie.mages.world.model.World;
 public class SyncWorldNotification implements Notification {
 	private static final long serialVersionUID = 647356225361461334L;
 	private World referenceWorld;
-	
+	private int ping;
+
 	/** No-arg constructor required by Kryonet */
 	SyncWorldNotification() {}
-	
-	public SyncWorldNotification(World referenceWorld) {
+
+	public SyncWorldNotification(World referenceWorld, int ping) {
 		this.referenceWorld = referenceWorld;
+		this.ping = ping;
 	}
 
 
@@ -31,8 +33,9 @@ public class SyncWorldNotification implements Notification {
 	@Override
 	public void receive() {
 		InjectionUtilities.inject(WorldSynchronizationService.class).sync(
-			InjectionUtilities.inject(World.class), 
-			referenceWorld
+			InjectionUtilities.inject(World.class),
+			referenceWorld,
+			ping/2
 		);
 	}
 }

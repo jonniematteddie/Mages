@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.google.inject.Inject;
 
@@ -12,6 +13,7 @@ import jonniematteddie.mages.framework.InjectionUtilities;
 import jonniematteddie.mages.networking.NetworkingUtils;
 import jonniematteddie.mages.networking.framework.PingRequest;
 import jonniematteddie.mages.networking.sync.SyncWorldNotification;
+import jonniematteddie.mages.server.networking.ClientPings;
 import jonniematteddie.mages.server.networking.ServerListener;
 import jonniematteddie.mages.world.model.World;
 import jonniematteddie.mages.world.service.WorldUpdateService;
@@ -25,6 +27,7 @@ public class MagesServer {
 
 	@Inject private Server server;
 	@Inject private ServerListener serverListener;
+	@Inject private ClientPings clientPings;
 
 	private final int tcpPort;
 	private final int udpPort;
@@ -59,7 +62,7 @@ public class MagesServer {
 		pingThread = new Thread(() -> {
 			while (true) {
 				try {
-					Thread.sleep(500);
+					Thread.sleep(200);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -75,7 +78,7 @@ public class MagesServer {
 			InjectionUtilities.inject(World.class)
 		).start();
 		pingThread.start();
-		
+
 		syncThread = new Thread(() -> {
 			while (true) {
 				try {
@@ -86,7 +89,10 @@ public class MagesServer {
 
 				World world = InjectionUtilities.inject(World.class);
 				synchronized (world) {
-					server.sendToAllTCP(new SyncWorldNotification(world));
+					for (int i = 0, n = server.getConnections().length; i < n; i++) {
+						Connection connection = server.getConnections()[i];
+						connection.sendTCP(new SyncWorldNotification(world, (int) clientPings.getPing(connection.getID())));
+					}
 				}
 			}
 		});

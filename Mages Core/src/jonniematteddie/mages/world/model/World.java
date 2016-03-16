@@ -16,10 +16,10 @@ import jonniematteddie.mages.world.service.WorldUpdateService;
  * A {@link World} holds information about:
  *
  * {@link Individual}s within this {@link World}
- * 
- * 
+ *
+ *
  * NOTES: World is currently bound as a {@link Singleton}, and is accessed by multiple threads.
- * 
+ *
  * - Synchronized here: {@link WorldUpdateService#updateWorld(World, int)}
  * - Synchronized here: jonniematteddie.mages.server.MagesServer.start()
  *
@@ -49,7 +49,7 @@ public class World implements Serializable {
 	 */
 	private World(float gravity) {
 		this.gravity = gravity;
-		this.frameNumber.set(System.currentTimeMillis());
+		this.frameNumber.set(0);
 	}
 
 

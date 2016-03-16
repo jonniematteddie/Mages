@@ -112,6 +112,23 @@ public class TestInputHistory {
 		Set<MappedKey> pressedKeysAtZ2 = testSubject.getPressedKeys(13);
 		Assert.assertTrue("Expected two keys to be pressed here", pressedKeysAtZ2.isEmpty());
 
+		// Check the released keys
+		// --------------------------------------------------------------------------------------
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(0).isEmpty());
+		Assert.assertTrue("Expected A to be released", testSubject.getReleasedKeys(1).contains(A));
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(2).isEmpty());
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(3).isEmpty());
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(4).isEmpty());
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(5).isEmpty());
+		Assert.assertTrue("Expected A to be released", testSubject.getReleasedKeys(6).contains(A));
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(7).isEmpty());
+		Assert.assertTrue("Expected B to be released", testSubject.getReleasedKeys(8).contains(B));
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(9).isEmpty());
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(10).isEmpty());
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(11).isEmpty());
+		Assert.assertTrue("Expected A and B to be released", testSubject.getReleasedKeys(12).contains(A) && testSubject.getReleasedKeys(12).contains(B));
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(13).isEmpty());
+
 		// Purging, key pressed at frame 605, meaning all histories < frame number 5 are deleted
 		// --------------------------------------------------------------------------------------
 		testSubject.keyPressed(605, A);
@@ -141,5 +158,10 @@ public class TestInputHistory {
 		// Assertion at point z
 		Set<MappedKey> pressedKeysAtZ3 = testSubject.getPressedKeys(13);
 		Assert.assertTrue("Expected two keys to be pressed here", pressedKeysAtZ3.isEmpty());
+
+		Assert.assertTrue("Expected no keys released at this frame", testSubject.getReleasedKeys(1).isEmpty());
+		Assert.assertTrue("Expected A to be released", testSubject.getReleasedKeys(6).contains(A));
+		Assert.assertTrue("Expected B to be released", testSubject.getReleasedKeys(8).contains(B));
+		Assert.assertTrue("Expected A and B to be released", testSubject.getReleasedKeys(12).contains(A) && testSubject.getReleasedKeys(12).contains(B));
 	}
 }

@@ -18,24 +18,25 @@ public class SyncWorldResponse extends Response {
 	private static final long serialVersionUID = -3784983356217192464L;
 
 	private World referenceWorld;
-	
+
 	/** No-arg constructor required for Kryonet */
 	private SyncWorldResponse() {
 		super(0L);
 	}
 
-	
+
 	public SyncWorldResponse(World referenceWorld, long requestID) {
 		super(requestID);
 		this.referenceWorld = referenceWorld;
 	}
 
-	
+
 	@Override
 	public void acknowledge(Connection connection) {
 		InjectionUtilities.inject(WorldSynchronizationService.class).sync(
-			InjectionUtilities.inject(World.class), 
-			referenceWorld
+			InjectionUtilities.inject(World.class),
+			referenceWorld,
+			0
 		);
 	}
 

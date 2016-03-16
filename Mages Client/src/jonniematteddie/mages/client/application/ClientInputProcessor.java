@@ -7,7 +7,9 @@ import com.google.inject.Singleton;
 import jonniematteddie.mages.client.networking.ClientNetworkUtils;
 import jonniematteddie.mages.networking.control.InputHistory;
 import jonniematteddie.mages.networking.control.KeyPressedRequest;
+import jonniematteddie.mages.networking.control.MagesInputProcessor;
 import jonniematteddie.mages.networking.control.MappedKey;
+import jonniematteddie.mages.networking.framework.ClientIDProvider;
 import jonniematteddie.mages.world.model.World;
 
 /**
@@ -19,8 +21,10 @@ import jonniematteddie.mages.world.model.World;
 public class ClientInputProcessor implements InputProcessor {
 
 	@Inject private ClientNetworkUtils clientNetworkUtils;
+	@Inject private MagesInputProcessor magesInputProcessor;
 	@Inject private InputHistory inputHistory;
 	@Inject private World world;
+	@Inject private ClientIDProvider clientIDProvider;
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -28,6 +32,7 @@ public class ClientInputProcessor implements InputProcessor {
 		if (key == null) {
 			return false;
 		} else {
+			magesInputProcessor.keyDown(keycode, clientIDProvider.getClientID());
 			inputHistory.keyPressed(world.getFrameNumber(), key);
 			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, true));
 			return true;
@@ -41,6 +46,7 @@ public class ClientInputProcessor implements InputProcessor {
 		if (key == null) {
 			return false;
 		} else {
+			magesInputProcessor.keyUp(keycode, clientIDProvider.getClientID());
 			inputHistory.keyReleased(world.getFrameNumber(), key);
 			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, false));
 			return true;

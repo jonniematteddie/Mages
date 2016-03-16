@@ -56,11 +56,13 @@ public class ServerListener extends Listener {
 	@Override
 	public void received(final Connection connection, final Object received) {
 		NetworkingUtils.run(() -> {
+			try {
+				Thread.sleep(50);
+			} catch (Exception e) {}
 			if (received instanceof Request) {
 				Request request = (Request) received;
 				request.receive();
 				Response response = request.prepareResponse();
-
 				if (response.replyToAll()) {
 					switch (response.getProtocol()) {
 					case TCP:

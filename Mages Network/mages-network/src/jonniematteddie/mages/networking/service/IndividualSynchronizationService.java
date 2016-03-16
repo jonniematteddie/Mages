@@ -20,7 +20,7 @@ import jonniematteddie.mages.world.model.World;
  */
 @Singleton
 public class IndividualSynchronizationService {
-	
+
 	@Inject private IndividualUpdateService individualUpdateService;
 	@Inject private MagesInputProcessor magesInputProcessor;
 	@Inject private InputHistory inputHistory;
@@ -33,18 +33,27 @@ public class IndividualSynchronizationService {
 	 * @param referenceIndividual individual to use as reference
 	 */
 	public void sync(Individual toSync, Individual referenceIndividual, long fromFrameNumber, long numberOfFramesToProject) {
-		
-		for (int i = 1; i <= numberOfFramesToProject; i++) {
-			Set<MappedKey> pressedKeys = inputHistory.getPressedKeys(fromFrameNumber + i);
-			if (pressedKeys != null) {
-				pressedKeys.forEach(key -> {
-					magesInputProcessor.keyDown(key.getKeyCode(), clientIDProvider.getClientID());
-				});
+
+		if (numberOfFramesToProject > 0) {
+			for (int i = 0; i <= numberOfFramesToProject; i++) {
+				Set<MappedKey> pressedKeys = inputHistory.getPressedKeys(fromFrameNumber + i);
+				if (pressedKeys != null) {
+					pressedKeys.forEach(key -> {
+						magesInputProcessor.keyDown(key.getKeyCode(), clientIDProvider.getClientID());
+					});
+				}
+
+				Set<MappedKey> releasedKeys = inputHistory.getReleasedKeys(fromFrameNumber + i);
+				if (releasedKeys != null) {
+					releasedKeys.forEach(key -> {
+						magesInputProcessor.keyUp(key.getKeyCode(), clientIDProvider.getClientID());
+					});
+				}
+
+				individualUpdateService.updateIndividual(referenceIndividual, 1);
 			}
-			
-			individualUpdateService.updateIndividual(referenceIndividual, 1);
 		}
-		
+
 		toSync.getKinematicState().getPosition().set(referenceIndividual.getKinematicState().getPosition());
 		toSync.getKinematicState().getVelocity().set(referenceIndividual.getKinematicState().getVelocity());
 		toSync.getKinematicState().getAcceleration().set(referenceIndividual.getKinematicState().getAcceleration());
