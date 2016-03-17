@@ -13,7 +13,8 @@ import jonniematteddie.mages.world.model.World;
  */
 @Singleton
 public class WorldUpdateService {
-	public static float UPDATE_TICK = 1f/60f;
+	// equals 16.666... but truncates to 16
+	public static long UPDATE_TICK = 1/60;
 
 	@Inject private IndividualUpdateService individualUpdateService;
 
@@ -42,7 +43,7 @@ public class WorldUpdateService {
 		return new Thread(() -> {
 			while (true) {
 				try {
-					Thread.sleep(16);
+					Thread.sleep(UPDATE_TICK);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

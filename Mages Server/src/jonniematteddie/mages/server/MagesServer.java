@@ -25,6 +25,9 @@ import jonniematteddie.mages.world.service.WorldUpdateService;
  */
 public class MagesServer {
 
+	private static final long VERIFY_CLIENT_STATES = 500;
+	private static final long CONDUCT_PING_REQUEST = 200;
+	
 	@Inject private Server server;
 	@Inject private ServerListener serverListener;
 	@Inject private ClientPings clientPings;
@@ -62,7 +65,7 @@ public class MagesServer {
 		pingThread = new Thread(() -> {
 			while (true) {
 				try {
-					Thread.sleep(200);
+					Thread.sleep(CONDUCT_PING_REQUEST);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -82,15 +85,16 @@ public class MagesServer {
 		syncThread = new Thread(() -> {
 			while (true) {
 				try {
-					Thread.sleep(500);
+					Thread.sleep(VERIFY_CLIENT_STATES);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 
+				// Verify kinematic states are the same as the server for every client. If that is not the case,
+				// make them the same as the server.
 				World world = InjectionUtilities.inject(World.class);
 				synchronized (world) {
-					for (int i = 0, n = server.getConnections().length; i < n; i++) {
-						Connection connection = server.getConnections()[i];
+					for (Connection connection : server.getConnections()) {
 						connection.sendTCP(new SyncWorldNotification(world, (int) clientPings.getPing(connection.getID())));
 					}
 				}
