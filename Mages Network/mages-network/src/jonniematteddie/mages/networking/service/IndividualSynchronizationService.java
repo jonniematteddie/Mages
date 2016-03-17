@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import jonniematteddie.mages.character.model.Individual;
 import jonniematteddie.mages.character.service.IndividualUpdateService;
 import jonniematteddie.mages.networking.control.InputHistory;
+import jonniematteddie.mages.networking.control.InputHistoryService;
 import jonniematteddie.mages.networking.control.MagesInputProcessor;
 import jonniematteddie.mages.networking.control.MappedKey;
 import jonniematteddie.mages.networking.framework.ClientIDProvider;
@@ -22,9 +23,8 @@ import jonniematteddie.mages.world.model.World;
 public class IndividualSynchronizationService {
 
 	@Inject private IndividualUpdateService individualUpdateService;
-	@Inject private MagesInputProcessor magesInputProcessor;
 	@Inject private InputHistory inputHistory;
-	@Inject private ClientIDProvider clientIDProvider;
+	@Inject private InputHistoryService inputHistoryService;
 
 	/**
 	 * Synchronises a given {@link Individual} with a reference {@link Individual}
@@ -36,20 +36,15 @@ public class IndividualSynchronizationService {
 
 		if (numberOfFramesToProject > 0) {
 			for (int i = 0; i <= numberOfFramesToProject; i++) {
+				// Process down key strokes
 				Set<MappedKey> pressedKeys = inputHistory.getPressedKeys(fromFrameNumber + i);
-				if (pressedKeys != null) {
-					pressedKeys.forEach(key -> {
-						magesInputProcessor.keyDown(key.getKeyCode(), clientIDProvider.getClientID());
-					});
-				}
+				inputHistoryService.processKeyDown(pressedKeys);
 
+				// Process key releases.
 				Set<MappedKey> releasedKeys = inputHistory.getReleasedKeys(fromFrameNumber + i);
-				if (releasedKeys != null) {
-					releasedKeys.forEach(key -> {
-						magesInputProcessor.keyUp(key.getKeyCode(), clientIDProvider.getClientID());
-					});
-				}
+				inputHistoryService.processKeyUp(releasedKeys);
 
+				// Update the individual, given the inputs
 				individualUpdateService.updateIndividual(referenceIndividual, 1);
 			}
 		}
