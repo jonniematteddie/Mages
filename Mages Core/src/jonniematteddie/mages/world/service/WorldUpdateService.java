@@ -13,8 +13,8 @@ import jonniematteddie.mages.world.model.World;
  */
 @Singleton
 public class WorldUpdateService {
-	// equals 16.666... but truncates to 16
-	public static long UPDATE_TICK = 1/60;
+	// 1/60 * (1000) equals 16.666... but truncates to 16
+	public static long UPDATE_TICK = 16;
 
 	@Inject private IndividualUpdateService individualUpdateService;
 

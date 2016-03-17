@@ -10,7 +10,6 @@ import jonniematteddie.mages.networking.framework.ClientIDProvider;
  * Service which process input history.
  * 
  * @author Eddie
- *
  */
 public class InputHistoryService {
 	
