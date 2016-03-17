@@ -6,10 +6,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import jonniematteddie.mages.character.model.Individual;
+import jonniematteddie.mages.character.model.PlayerControlledIndividual;
 import jonniematteddie.mages.character.service.IndividualUpdateService;
 import jonniematteddie.mages.networking.control.InputHistory;
 import jonniematteddie.mages.networking.control.InputHistoryService;
 import jonniematteddie.mages.networking.control.MappedKey;
+import jonniematteddie.mages.networking.framework.ClientIDProvider;
 import jonniematteddie.mages.world.model.World;
 
 /**
@@ -23,6 +25,7 @@ public class IndividualSynchronizationService {
 	@Inject private IndividualUpdateService individualUpdateService;
 	@Inject private InputHistory inputHistory;
 	@Inject private InputHistoryService inputHistoryService;
+	@Inject private ClientIDProvider clientIDProvider;
 
 	/**
 	 * Synchronises a given {@link Individual} with a reference {@link Individual}
@@ -31,18 +34,22 @@ public class IndividualSynchronizationService {
 	 * @param referenceIndividual individual to use as reference
 	 */
 	public void sync(Individual toSync, Individual referenceIndividual, long fromFrameNumber, long numberOfFramesToProject) {
-		if (numberOfFramesToProject > 0) {
-			for (int i = 0; i <= numberOfFramesToProject; i++) {
-				// Process down key strokes
-				Set<MappedKey> pressedKeys = inputHistory.getPressedKeys(fromFrameNumber + i);
-				inputHistoryService.processKeyDown(pressedKeys);
-
-				// Process key releases.
-				Set<MappedKey> releasedKeys = inputHistory.getReleasedKeys(fromFrameNumber + i);
-				inputHistoryService.processKeyUp(releasedKeys);
-
-				// Update the individual, given the inputs
-				individualUpdateService.updateIndividual(referenceIndividual, 1);
+		
+		if (toSync instanceof PlayerControlledIndividual && 
+			((PlayerControlledIndividual) toSync).getClientID() == clientIDProvider.getClientID()) {
+			if (numberOfFramesToProject > 0) {
+				for (int i = 0; i <= numberOfFramesToProject; i++) {
+					// Process down key strokes
+					Set<MappedKey> pressedKeys = inputHistory.getPressedKeys(fromFrameNumber + i);
+					inputHistoryService.processKeyDown(pressedKeys);
+					
+					// Process key releases.
+					Set<MappedKey> releasedKeys = inputHistory.getReleasedKeys(fromFrameNumber + i);
+					inputHistoryService.processKeyUp(releasedKeys);
+					
+					// Update the individual, given the inputs
+					individualUpdateService.updateIndividual(referenceIndividual, 1);
+				}
 			}
 		}
 

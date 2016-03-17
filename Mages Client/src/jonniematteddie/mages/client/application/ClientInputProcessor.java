@@ -34,7 +34,7 @@ public class ClientInputProcessor implements InputProcessor {
 		} else {
 			magesInputProcessor.keyDown(keycode, clientIDProvider.getClientID());
 			inputHistory.keyPressed(world.getFrameNumber(), key);
-			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, true));
+			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, true, world.getFrameNumber()));
 			return true;
 		}
 	}
@@ -48,7 +48,7 @@ public class ClientInputProcessor implements InputProcessor {
 		} else {
 			magesInputProcessor.keyUp(keycode, clientIDProvider.getClientID());
 			inputHistory.keyReleased(world.getFrameNumber(), key);
-			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, false));
+			clientNetworkUtils.sendTCPAsynchronous(new KeyPressedRequest(key, false, world.getFrameNumber()));
 			return true;
 		}
 	}

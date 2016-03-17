@@ -14,15 +14,25 @@ public class KeyPressedRequest extends Request {
 	private static final long serialVersionUID = 4804317738948004502L;
 	private MappedKey mappedKey;
 	private boolean pressed;
+	private long frameNumber;
 
 	/**
 	 * @param mappedKey of the key pressed/released
 	 * @param pressed - true if pressed, false if released
 	 */
-	public KeyPressedRequest(MappedKey mappedKey, boolean pressed) {
+	public KeyPressedRequest(MappedKey mappedKey, boolean pressed, long frameNumber) {
 		super();
 		this.mappedKey = mappedKey;
 		this.pressed = pressed;
+		this.frameNumber = frameNumber;
+	}
+	
+	
+	/**
+	 * @return the frame number when this was pressed/released
+	 */
+	public long getFrameNumber() {
+		return frameNumber;
 	}
 
 

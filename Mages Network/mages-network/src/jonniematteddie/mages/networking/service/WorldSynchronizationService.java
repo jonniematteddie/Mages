@@ -37,7 +37,7 @@ public class WorldSynchronizationService {
 			if (clientIndividual == null) {
 				toSync.addIndividual(serverIndividual);
 			} else {
-				individualSynchronizationService.sync(clientIndividual, serverIndividual, referenceWorld.getFrameNumber(), ping / WorldUpdateService.UPDATE_TICK);
+				individualSynchronizationService.sync(clientIndividual, serverIndividual, referenceWorld.getFrameNumber() - ping * 2 / WorldUpdateService.UPDATE_TICK + 1, ping * 2 / WorldUpdateService.UPDATE_TICK + 1);
 			}
 		});
 
