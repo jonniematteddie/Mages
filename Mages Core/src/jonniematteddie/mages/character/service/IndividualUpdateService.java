@@ -24,11 +24,11 @@ public class IndividualUpdateService {
 		IndividualKinematicState newState = individual.getKinematicState().copy();
 
 		for (int i = 0; i < numberOfFrames; i++) {
-			newState.getPosition().x += newState.getVelocity().x * WorldUpdateService.UPDATE_TICK;
-			newState.getPosition().y += newState.getVelocity().y * WorldUpdateService.UPDATE_TICK;
+			newState.getPosition().x += newState.getVelocity().x * WorldUpdateService.UPDATE_TICK_MS;
+			newState.getPosition().y += newState.getVelocity().y * WorldUpdateService.UPDATE_TICK_MS;
 
-			newState.getVelocity().x += newState.getAcceleration().x * WorldUpdateService.UPDATE_TICK;
-			newState.getVelocity().y += newState.getAcceleration().y * WorldUpdateService.UPDATE_TICK;
+			newState.getVelocity().x += newState.getAcceleration().x * WorldUpdateService.UPDATE_TICK_MS;
+			newState.getVelocity().y += newState.getAcceleration().y * WorldUpdateService.UPDATE_TICK_MS;
 		}
 
 		return newState;

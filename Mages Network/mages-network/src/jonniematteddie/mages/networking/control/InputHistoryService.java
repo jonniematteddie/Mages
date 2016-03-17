@@ -35,7 +35,7 @@ public class InputHistoryService {
 	/**
 	 * Processes any key releases. This is meant to process a single frame of input.
 	 * 
-	 * @param keysToProcess
+	 * @param keysToProcess	
 	 */
 	public void processKeyUp(Set<MappedKey> keysToProcess) {
 		if (keysToProcess != null) {
