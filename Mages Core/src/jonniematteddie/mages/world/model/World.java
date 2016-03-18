@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 
 import jonniematteddie.mages.character.model.Individual;
+import jonniematteddie.mages.character.model.IndividualKinematicState;
 import jonniematteddie.mages.character.model.PlayerControlledIndividual;
 import jonniematteddie.mages.world.service.WorldUpdateService;
 
@@ -160,6 +162,10 @@ public class World implements Serializable {
 		}
 	}
 
+	
+	public WorldState getWorldStateSnapshot() {
+		return createWorldStateSnapshot();
+	}
 
 	/**
 	 * @return the gravitational acceleration value
@@ -174,5 +180,14 @@ public class World implements Serializable {
 	 */
 	public void setGravity(float gravity) {
 		this.gravity = gravity;
+	}
+	
+	
+	private WorldState createWorldStateSnapshot() {
+		Maps.transformValues(individuals, new Function<Individual, IndividualKinematicState>)
+		
+		
+		
+		return new WorldState(kinematicStates)
 	}
 }
