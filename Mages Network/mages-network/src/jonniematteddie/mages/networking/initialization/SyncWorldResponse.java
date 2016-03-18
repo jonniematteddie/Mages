@@ -27,6 +27,8 @@ public class SyncWorldResponse extends Response {
 
 	public SyncWorldResponse(World referenceWorld, long requestID) {
 		super(requestID);
+		World serverWorld = InjectionUtilities.inject(World.class);
+		referenceWorld.setFrameNumber(serverWorld.getFrameNumber());
 		this.referenceWorld = referenceWorld;
 	}
 

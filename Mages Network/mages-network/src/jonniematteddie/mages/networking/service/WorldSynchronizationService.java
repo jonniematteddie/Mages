@@ -27,9 +27,6 @@ public class WorldSynchronizationService {
 	public void sync(World toSync, World referenceWorld, int ping) {
 		toSync.setGravity(referenceWorld.getGravity());
 
-		// Update client frame number
-		toSync.setFrameNumber(referenceWorld.getFrameNumber());
-
 		// For each individual in the reference world, synchronize with the client counterpart.
 		// If client does not contain the individual, add it
 		referenceWorld.forEachIndividual(serverIndividual -> {

@@ -33,6 +33,11 @@ public class Individual implements Serializable {
 	public IndividualKinematicState getKinematicState() {
 		return kinematicState;
 	}
+	
+	
+	public void setKinematicState(final IndividualKinematicState individualKinematicState) {
+		kinematicState = individualKinematicState;
+	}
 
 
 	/**

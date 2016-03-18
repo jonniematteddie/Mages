@@ -56,6 +56,7 @@ public class ServerListener extends Listener {
 	@Override
 	public void received(final Connection connection, final Object received) {
 		NetworkingUtils.run(() -> {
+			// artificial ping
 			try {
 				Thread.sleep(50);
 			} catch (Exception e) {}

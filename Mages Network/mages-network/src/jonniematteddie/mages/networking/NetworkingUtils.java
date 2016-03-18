@@ -71,6 +71,7 @@ public class NetworkingUtils {
 		classesToRegister.add(PingResponse.class);
 		classesToRegister.add(Request.class);
 		classesToRegister.add(Response.class);
+		classesToRegister.add(WorldState.class);
 
 		return classesToRegister;
 	}

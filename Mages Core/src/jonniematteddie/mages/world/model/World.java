@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 
@@ -166,7 +165,20 @@ public class World implements Serializable {
 	public WorldState getWorldStateSnapshot() {
 		return createWorldStateSnapshot();
 	}
+	
+	
+	/**
+	 * For every individual in this world, save the new kinematic state of the
+	 * passed in {@link WorldState}.
+	 * 
+	 * @param worldState The snapshot to set the current world to.
+	 */
+	public void saveWorldStateSnapshot(final WorldState worldState) {
+		for (Map.Entry<Long, Individual> individual: individuals.entrySet()) 
+			individuals.get(individual.getKey()).setKinematicState(worldState.getIndividualKinematicState(individual.getKey()));
+	}
 
+	
 	/**
 	 * @return the gravitational acceleration value
 	 */
@@ -183,11 +195,18 @@ public class World implements Serializable {
 	}
 	
 	
+	/**
+	 * Maps {@link #individuals} to their {@link IndividualKinematicState}.
+	 * 
+	 * @return The world state.
+	 */
 	private WorldState createWorldStateSnapshot() {
-		Maps.transformValues(individuals, new Function<Individual, IndividualKinematicState>)
+		// create a map of <Long, IndividualKinematicState>.
+		// TODO - use a transform function instead of a for loop unless that is equal or less efficient.
+		Map<Long, IndividualKinematicState> kinematicStates = Maps.newConcurrentMap();
+		for (Map.Entry<Long, Individual> individual: individuals.entrySet())
+			kinematicStates.put(individual.getKey(), individual.getValue().getKinematicState());
 		
-		
-		
-		return new WorldState(kinematicStates)
+		return new WorldState(kinematicStates);
 	}
 }
